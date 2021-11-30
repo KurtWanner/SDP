@@ -29,6 +29,7 @@ class Object {
 
         void setX(int);
         void setY(int); 
+        
 };
 
 

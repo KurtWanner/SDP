@@ -46,6 +46,7 @@ int Object :: getX(){
     return PosX;
 }
 
+
 int Object :: getY(){
     return PosY;
 }

@@ -24,6 +24,7 @@ int main() {
     a.setY(10);
     a.setWidth(100);
     a.setHeight(50);
+    
     LCD.DrawRectangle(a.getX(), a.getY(), a.getWidth(), a.getHeight());
 
     while (1) {

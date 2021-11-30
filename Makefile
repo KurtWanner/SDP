@@ -2,7 +2,6 @@ CC = g++
 LD = $(CC)
 GITBINARY = git
 FIRMWAREREPO = simulator_libraries
-FEHURL = code.osu.edu
 
 CPPFLAGS = -MMD -MP -Os -DOBJC_OLD_DISPATCH_PROTOTYPES -g
 
@@ -26,39 +25,6 @@ endif
 
 SRC_FILES := $(wildcard ./*.cpp)
 OBJ_FILES := $(patsubst ./%.cpp,./%.o,$(SRC_FILES))
-
-all: pre-build $(EXEC)
-
-pre-build:
-ifeq ($(OS),Windows_NT)	
-# check for internet connection
-	@ping -n 1 -w 1000 $(FEHURL) > NUL & \
-	if errorlevel 1 \
-	( \
-		( echo "Warning: No internet connection!" ) \
-	) \
-	else \
-	( \
-		( \
-			cd $(LIB_DIR) && \
-			$(GITBINARY) stash && \
-			$(GITBINARY) pull && \
-			cd .. \
-		) \
-	) 
-else
-# Mac/Linux
-	@ping -c 1 -W 1000 $(FEHURL) > /dev/null ; \
-	if [ "$$?" -ne 0 ]; then \
-		echo "Warning: No internet connection!"; \
-	else \
-		cd $(LIB_DIR) ; \
-		$(GITBINARY) stash ; \
-		$(GITBINARY) pull ; \
-		cd .. ; \
-	fi \
-
-endif
 
 $(EXEC): $(OBJ_FILES) $(OBJS)
 	$(CC) $(CPPFLAGS) $(WARNINGS) $(INC_DIRS) $(OBJ_FILES) $(OBJS) -o $(EXEC) $(LDFLAGS)
