@@ -42,6 +42,14 @@ void Object :: setHeight(int h){
     Height = h;
 }
 
+int Object :: getX(){
+    return PosX;
+}
+
+int Object :: getY(){
+    return PosY;
+}
+
 void Object :: setX(int x){
     PosX = x;
 }
