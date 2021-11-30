@@ -18,3 +18,4 @@ To Add Another Object:
     b. use this format: $(LIB_DIR)/CLASSNAME.o
 
 5. Should be good to go
+
