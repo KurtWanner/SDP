@@ -2,45 +2,50 @@
 
 Object::Object(){
     //Constructor
-    // TODO
+    PosX = 0;
+    PosY = 0;
+
+    Width = 0;
+    Height = 0;
 }
 
+/* Top left pixel is (0, 0) */
 int Object :: getLeftBound(){
-    // TODO
+    return PosX;
 }
 
 int Object :: getRightBound(){
-    // TODO
+    return PosX + Width;
 }
 
 int Object :: getUpperBound(){
-    // TODO
+    return PosY;
 }
 
 int Object :: getLowerBound(){
-    // TODO
+    return PosY + Height;
 }
 
 int Object :: getWidth(){
-    // TODO
+    return Width;
 }
 
 int Object :: getHeight(){
-    // TODO
+    return Height;
 }
 
 void Object :: setWidth(int w){
-    // TODO
+    Width = w;
 }
 
 void Object :: setHeight(int h){
-    // TODO
+    Height = h;
 }
 
 void Object :: setX(int x){
-    // TODO
+    PosX = x;
 }
 
 void Object :: setY(int y){
-    //TODO
+    PosY = y;
 }

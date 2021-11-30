@@ -5,10 +5,10 @@
 class Object {
     private: 
         /* Assume all objects are rectangles */
-        int width, height;
+        int Width, Height;
 
         /* X and Y Positions for each object */
-        int posX, posY;
+        int PosX, PosY;
     public:
         Object();
 
@@ -23,6 +23,9 @@ class Object {
 
         void setWidth(int);
         void setHeight(int);
+
+        int getX();
+        int getY();
 
         void setX(int);
         void setY(int); 

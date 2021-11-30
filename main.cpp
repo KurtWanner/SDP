@@ -20,8 +20,11 @@ int main() {
 
     // Testing object class
     Object a;
-    a.getWidth();
-    LCD.WriteLine(a.getWidth());
+    a.setX(30);
+    a.setY(10);
+    a.setWidth(100);
+    a.setHeight(50);
+    LCD.DrawRectangle(a.getX(), a.getY(), a.getWidth(), a.getHeight());
 
     while (1) {
         LCD.Update();
