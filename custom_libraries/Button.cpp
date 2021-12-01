@@ -10,10 +10,14 @@ void Button :: draw(){
 }
 
 bool Button :: btnClicked(int x, int y){
+
+    /* Collision detection */
     if(x < getLeftBound()){ return false;};
     if(x > getRightBound()){ return false;};
     if(y > getLowerBound()){ return false;};
     if(y < getUpperBound()){ return false;};
+
+    /* If none of the following if statement are triggered, the click was inside the button */
     return true;
 
 }

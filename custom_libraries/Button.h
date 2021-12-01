@@ -6,10 +6,14 @@
 class Button : public Object{
     private:
         char text[10];
+        
     public:
+
+        /* Constructor inherited from Object */
         Button(int w, int h, float x, float y, const char *t) : Object(w, h, x, y) {
             strcpy(text, t);
         }
+
         void draw();
         bool btnClicked(int, int);
 
