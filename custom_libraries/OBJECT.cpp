@@ -42,19 +42,18 @@ void Object :: setHeight(int h){
     Height = h;
 }
 
-int Object :: getX(){
+float Object :: getX(){
     return PosX;
 }
 
-
-int Object :: getY(){
+float Object :: getY(){
     return PosY;
 }
 
-void Object :: setX(int x){
+void Object :: setX(float x){
     PosX = x;
 }
 
-void Object :: setY(int y){
+void Object :: setY(float y){
     PosY = y;
 }

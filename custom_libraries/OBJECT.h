@@ -8,7 +8,7 @@ class Object {
         int Width, Height;
 
         /* X and Y Positions for each object */
-        int PosX, PosY;
+        float PosX, PosY;
     public:
         Object();
 
@@ -24,11 +24,11 @@ class Object {
         void setWidth(int);
         void setHeight(int);
 
-        int getX();
-        int getY();
+        float getX();
+        float getY();
 
-        void setX(int);
-        void setY(int); 
+        void setX(float);
+        void setY(float); 
         
 };
 

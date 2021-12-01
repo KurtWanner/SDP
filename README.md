@@ -10,12 +10,10 @@ To Add Another Object:
 2. Create class.cpp file with class functions
     a. Include class.h file
 
-3. Add path to class files in main.d
-    a. Follow format given in file
 
-4. Add path to Makefile
+3. Add path to Makefile
     a. There should be a comment of where to do it
-    b. use this format: $(LIB_DIR)/CLASSNAME.o
+    b. use this format: $(CUS_DIR)/CLASSNAME.o
 
-5. Should be good to go
+4. Should be good to go
 
