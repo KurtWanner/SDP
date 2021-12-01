@@ -7,6 +7,7 @@
 #include "OBJECT.h"
 #include <Dino.h>
 #include <Constants.h>
+#include <Button.h>
 
 void UpdateFrame();
 void UpdateDinosaur();
@@ -33,55 +34,78 @@ unsigned char t_rex_title[TREX_WIDTH*TREX_HEIGHT] =
 
 
 // Dino :)
-Dino dino;
+Dino dino(15, 15, 50.0, FLOOR_HEIGHT - 15.0);
 
 int gameState = MAIN_MENU;
 
+/* x and y used for LCD.Touch() */
+float x, y;
+Button playBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 50.0, "Play");
+Button statsBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 100.0, "Stats");
+Button quitBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 150.0, "Quit");
+
+void drawMainMenu();
+
 int main() {
-    // Clear background
+
+    /* Clear background */
     LCD.SetBackgroundColor(WHITE);
     LCD.Clear();
 
-    // Testing Dino class
-    dino.setWidth(15);
-    dino.setHeight(15);
-    dino.setX(50.0);
+    printf("%lli", sizeof("aa"));
 
-    /*Set Dino to floor */
-    dino.setY(FLOOR_HEIGHT - dino.getHeight());
+    /* To always run */
+    while(1){
 
-    /* x and y used for LCD.Touch() */
-    float x, y;
-    dino.Draw();
+        if(gameState == MAIN_MENU){
 
-    /* I added a horizontal offset to have the title in the middle of the screen */
-    int horz_offset = 80;
-     for (int i = 0; i < TREX_HEIGHT; ++i) {
-            for (int j = horz_offset; j < TREX_WIDTH + horz_offset; ++j) {
-                int col = t_rex_title[i * TREX_WIDTH + j - horz_offset];
-                LCD.SetFontColor(col ? WHITE : BLACK);
-                LCD.DrawPixel(j, i);
+            /* Draw main menu only once */
+            drawMainMenu();
+
+            /* Continue running until user makes choice */
+            while(gameState == MAIN_MENU){
+                if(LCD.Touch(&x, &y)){
+                    if(playBtn.btnClicked(x, y)){ 
+                        printf("Play");
+                        gameState = 1;
+                    }
+                    if(statsBtn.btnClicked(x, y)){ printf("Stats");};
+                    if(quitBtn.btnClicked(x, y)){ printf("Quit");};
+                }
             }
+        } 
+
+        if(gameState == GAME){
+
+            LCD.Clear();
+
+            /* Draw floor once until floor animation added */
+            LCD.SetFontColor(BLACK);
+            LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT);
+
+            while (gameState == GAME) {
+
+                LCD.Update();
+                Sleep(1.0 / FPS);
+                UpdateFrame();
+
+                /* Clicking the screen makes dino jump */
+                if(LCD.Touch(&x, &y)){
+                //printf("Touch\n");
+                dino.Jump();
+            }
+            // Never end
         }
-
-    /* Draws a simple floor beneath the dino */
-    LCD.SetFontColor(BLACK);
-    LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT);
-
-    while (1) {
-
-
-        LCD.Update();
-        Sleep(1.0 / FPS);
-        UpdateFrame();
-
-        /* Clicking the screen makes dino jump */
-        if(LCD.Touch(&x, &y)){
-            //printf("Touch\n");
-            dino.Jump();
         }
-        // Never end
+         
+        dino.Draw();
+
+        /* Draws a simple floor beneath the dino */
+
+
+        
     }
+
     return 0;
 }
 
@@ -100,4 +124,21 @@ void UpdateDinosaur(){
 
 void UpdateObstacles(){
     //TODO
+}
+
+void drawMainMenu(){
+
+    /* I added a horizontal offset to have the title in the middle of the screen */
+    int horz_offset = 80;
+    for (int i = 0; i < TREX_HEIGHT; ++i) {
+        for (int j = horz_offset; j < TREX_WIDTH + horz_offset; ++j) {
+            int col = t_rex_title[i * TREX_WIDTH + j - horz_offset];
+            LCD.SetFontColor(col ? WHITE : BLACK);
+            LCD.DrawPixel(j, i);
+        }
+    }
+
+    playBtn.draw();
+    statsBtn.draw();
+    quitBtn.draw();
 }

@@ -3,12 +3,6 @@
 #include <iostream>
 #include <Constants.h>
 
-
-Dino :: Dino(){
-    vel = 0;
-    acc = DINO_ACC * FPS; //Going downward
-}
-
 void Dino :: UpdatePosition(){
 
     /* Change y position based on velocity and FPS */

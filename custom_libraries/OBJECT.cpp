@@ -1,12 +1,12 @@
 #include "object.h"
 
-Object::Object(){
+Object::Object(int width, int height, float posX, float posY){
     //Constructor
-    PosX = 0;
-    PosY = 0;
+    PosX = posX;
+    PosY = posY;
 
-    Width = 0;
-    Height = 0;
+    Width = width;
+    Height = height;
 }
 
 /* Top left pixel is (0, 0) */

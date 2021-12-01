@@ -7,7 +7,7 @@ class Obstacle : public Object{
     private:
 
     public:
-        Obstacle();
+        Obstacle(int w, int h, float x, float y) : Object(w, h, x, y) {}
 };
 
 #endif

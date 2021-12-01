@@ -10,7 +10,7 @@ class Object {
         /* X and Y Positions for each object */
         float PosX, PosY;
     public:
-        Object();
+        Object(int, int, float, float);
 
         /* These functions will be used for colision detection */
         int getLeftBound();

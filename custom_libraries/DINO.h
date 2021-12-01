@@ -2,6 +2,7 @@
 #define DINO_H
 
 #include "OBJECT.h"
+#include <Constants.h>
 
 class Dino : public Object{
     private:
@@ -13,7 +14,12 @@ class Dino : public Object{
         int animationState;
 
     public:
-        Dino();
+
+        /* Constructor class inheritance */
+        Dino(int w, int h, float x, float y) : Object(w, h, x, y) {
+            vel = 0;
+            acc = DINO_ACC * FPS; //Going downward
+        }
 
         void UpdateVelocity();
         void UpdatePosition();        
