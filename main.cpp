@@ -6,9 +6,7 @@
 #include <tigr.h>
 #include "OBJECT.h"
 #include <Dino.h>
-
-/* Just set the FPS to 30 as a default value */
-#define FPS 30
+#include <Constants.h>
 
 void UpdateFrame();
 void UpdateDinosaur();
@@ -35,31 +33,53 @@ unsigned char t_rex_title[TREX_WIDTH*TREX_HEIGHT] =
 
 
 // Dino :)
-Dino a;
+Dino dino;
+
+int gameState = MAIN_MENU;
 
 int main() {
     // Clear background
-    LCD.SetBackgroundColor(BLACK);
+    LCD.SetBackgroundColor(WHITE);
     LCD.Clear();
 
     // Testing Dino class
-    a.setX(50.0);
-    a.setY(100.0);
-    a.setWidth(20);
-    a.setHeight(20);
-    
-    a.Draw();
-    while (1) {
-        for (int i = 0; i < TREX_HEIGHT; ++i) {
-            for (int j = 0; j < TREX_WIDTH; ++j) {
-                int col = t_rex_title[i * TREX_WIDTH + j];
+    dino.setWidth(15);
+    dino.setHeight(15);
+    dino.setX(50.0);
+
+    /*Set Dino to floor */
+    dino.setY(FLOOR_HEIGHT - dino.getHeight());
+
+    /* x and y used for LCD.Touch() */
+    float x, y;
+    dino.Draw();
+
+    /* I added a horizontal offset to have the title in the middle of the screen */
+    int horz_offset = 80;
+     for (int i = 0; i < TREX_HEIGHT; ++i) {
+            for (int j = horz_offset; j < TREX_WIDTH + horz_offset; ++j) {
+                int col = t_rex_title[i * TREX_WIDTH + j - horz_offset];
                 LCD.SetFontColor(col ? WHITE : BLACK);
                 LCD.DrawPixel(j, i);
             }
         }
+
+    /* Draws a simple floor beneath the dino */
+    LCD.SetFontColor(BLACK);
+    LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT);
+
+    while (1) {
+
+
         LCD.Update();
-        Sleep(1 / FPS);
+        Sleep(1.0 / FPS);
         UpdateFrame();
+
+        /* Clicking the screen makes dino jump */
+        if(LCD.Touch(&x, &y)){
+            //printf("Touch\n");
+            dino.Jump();
+        }
         // Never end
     }
     return 0;
@@ -72,10 +92,10 @@ void UpdateFrame(){
 }
 
 void UpdateDinosaur(){
-    a.Erase();
-    a.UpdateVelocity();
-    a.UpdatePosition();
-    a.Draw();
+    dino.Erase();
+    dino.UpdateVelocity();
+    dino.UpdatePosition();
+    dino.Draw();
 }
 
 void UpdateObstacles(){

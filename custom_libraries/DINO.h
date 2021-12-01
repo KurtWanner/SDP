@@ -20,6 +20,8 @@ class Dino : public Object{
 
         void Draw();
         void Erase();
+
+        void Jump();
 };
 
 #endif
