@@ -2,6 +2,12 @@
 
 #include "Graphics.h"
 
+void Sprite::Init(const unsigned char *p, int w, int h) {
+    pixels = p;
+    width = w;
+    height = h;
+}
+
 void Sprite::Draw(int x, int y) {
     LCD.SetFontColor(BLACK);
     for (int i = 0; i < height; ++i) {

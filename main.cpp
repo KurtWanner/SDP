@@ -11,6 +11,7 @@
 #include <Button.h>
 
 void UpdateFrame();
+void ClearFrame();
 void UpdateDinosaur();
 void UpdateObstacles();
 void drawMainMenu();
@@ -86,9 +87,15 @@ int main() {
 }
 
 void UpdateFrame(){
+    ClearFrame();
     UpdateDinosaur();
     UpdateObstacles();
     //TODO
+}
+
+void ClearFrame() {
+    LCD.SetFontColor(WHITE);
+    LCD.FillRectangle(0, 0, LCD_WIDTH, LCD_HEIGHT);
 }
 
 void UpdateDinosaur(){

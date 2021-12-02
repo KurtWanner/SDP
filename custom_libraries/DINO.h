@@ -2,7 +2,18 @@
 #define DINO_H
 
 #include "OBJECT.h"
+#include "Graphics.h"
 #include <Constants.h>
+
+enum DinoFrame {
+    DF_IDLE,
+    DF_DEAD,
+    DF_RUN_1,
+    DF_RUN_2,
+    DF_DUCK_1,
+    DF_DUCK_2,
+    NUM_DF
+};
 
 class Dino : public Object{
     private:
@@ -11,16 +22,12 @@ class Dino : public Object{
         float acc;
 
         /* Not in use yet, maybe use with draw function? */
-        int animationState;
+        DinoFrame animationState;
+        Sprite animationFrames[NUM_DF];
 
     public:
 
-        /* Constructor class inheritance */
-        Dino(int w, int h, float x, float y) : Object(w, h, x, y) {
-            vel = 0;
-            acc = DINO_ACC * FPS; //Going downward
-        }
-
+        Dino(int w, int h, float x, float y);
         void UpdateVelocity();
         void UpdatePosition();        
 

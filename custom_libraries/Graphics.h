@@ -3,10 +3,11 @@
 
 class Sprite {
 public:
-    unsigned char *pixels;
+    const unsigned char *pixels;
     int width, height;
 
-    Sprite(unsigned char *p, int w, int h) : pixels(p), width(w), height(h) {}
+    Sprite() {}
+    void Init(const unsigned char *p, int w, int h);
     void Draw(int x, int y);
 };
 
