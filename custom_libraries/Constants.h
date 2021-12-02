@@ -11,8 +11,8 @@
 #define FLOOR_HEIGHT 160
 
 /* Dimensions of the screen */
-#define LCD_WIDTH 319
-#define LCD_HEIGHT 239
+#define LCD_WIDTH 320
+#define LCD_HEIGHT 240
 
 /* Game state constants */
 #define MAIN_MENU 0

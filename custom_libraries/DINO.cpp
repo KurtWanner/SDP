@@ -1,4 +1,5 @@
 #include "DINO.h"
+#include "Graphics.h"
 #include <FEHLCD.h>
 #include <iostream>
 #include <Constants.h>
@@ -24,13 +25,23 @@ void Dino :: UpdateVelocity(){
 void Dino :: Draw(){
     /* Draw As rectangle for now */
     LCD.SetFontColor(BLACK);
-    LCD.DrawRectangle((int) getX(), (int) getY(), getWidth(), getHeight());
+    for (int i = 0; i < TREX_IDLE_HEIGHT; ++i) {
+        for (int j = 0; j < TREX_IDLE_WIDTH; ++j) {
+            if (t_rex_idle[i*TREX_IDLE_WIDTH + j] != 0xff)
+                LCD.DrawPixel(getX()+j, getY()+i);
+        }
+    }
+    //LCD.DrawRectangle((int) getX(), (int) getY(), getWidth(), getHeight());
 }
 
 void Dino :: Erase(){
     /* Draws current position as black to erase dino */
     LCD.SetFontColor(WHITE);
-    LCD.DrawRectangle((int) getX(), (int) getY(), getWidth(), getHeight());
+    for (int i = 0; i < TREX_IDLE_HEIGHT; ++i) {
+        for (int j = 0; j < TREX_IDLE_WIDTH; ++j) {
+                LCD.DrawPixel(getX()+j, getY()+i);
+        }
+    }
 }
 
 void Dino :: Jump(){
