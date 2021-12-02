@@ -2,7 +2,7 @@
 
 #include "Graphics.h"
 
-void Sprite::draw(int x, int y) {
+void Sprite::Draw(int x, int y) {
     LCD.SetFontColor(BLACK);
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
