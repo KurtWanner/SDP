@@ -42,9 +42,17 @@ class Dino : public Object{
         void UpdateAnimation(int tic);     
 
         void Draw();
-        void Erase();
 
         void Jump();
+        void Duck();
+
+        /* For when input is removed */
+        void Settle();
+
+        void IncreaseGravity();
+        void DecreaseGravity();
+
+        void Kill();
 };
 
 #endif

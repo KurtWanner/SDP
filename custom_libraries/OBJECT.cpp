@@ -1,4 +1,8 @@
 #include "object.h"
+#include <stdio.h>
+#include <iostream>
+
+using namespace std;
 
 Object::Object(int width, int height, float posX, float posY){
     //Constructor
@@ -7,6 +11,23 @@ Object::Object(int width, int height, float posX, float posY){
 
     Width = width;
     Height = height;
+}
+
+bool Object :: collision(Object ob){
+
+    if(getLeftBound() > ob.getRightBound()){
+        return false;
+    }
+    if(getRightBound() < ob.getLeftBound()){
+        return false;
+    }
+    if(getUpperBound() > ob.getLowerBound()){
+        return false;
+    }
+    if(getLowerBound() < ob.getUpperBound()){
+        return false;
+    }
+    return true;
 }
 
 /* Top left pixel is (0, 0) */

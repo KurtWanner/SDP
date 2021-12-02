@@ -5,7 +5,13 @@
 
 /* Dino Gravity variables */
 #define JUMP_VEL -8
-#define DINO_ACC 75
+#define MAX_DINO_ACC 100
+#define DEF_DINO_ACC 60
+#define MIN_DINO_ACC 30
+
+/* Controls how fast gravity is increased or decreased */
+#define ACC_DEC_VAR 3
+#define ACC_INC_VAR 10
 
 /* Where the floor is */
 #define FLOOR_HEIGHT 160
@@ -18,6 +24,7 @@
 enum GameState {
     GS_MENU,
     GS_GAME,
+    GS_GAMEOVER,
     GS_STATS,
     GS_CREDITS,
     GS_HELP,

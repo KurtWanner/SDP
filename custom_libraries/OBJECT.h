@@ -29,6 +29,8 @@ class Object {
 
         void setX(float);
         void setY(float); 
+
+        bool collision(Object);
         
 };
 

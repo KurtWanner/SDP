@@ -6,7 +6,7 @@
 
 Dino :: Dino(int w, int h, float x, float y) :  Object(w, h, x, y),
                                                 vel(0),
-                                                acc(DINO_ACC * FPS),
+                                                acc(0),
                                                 animationState(DF_RUN_1),
                                                 dinoState(DS_RUN)
 {
@@ -27,8 +27,9 @@ void Dino :: UpdatePosition(){
     /* Ensures dino doesn't go below floor */
     if(getY() + getHeight() > FLOOR_HEIGHT){
         vel = 0;
+        acc = 0;
         setY(FLOOR_HEIGHT - getHeight());
-        dinoState = DS_RUN;
+
     }
 }
 
@@ -38,19 +39,9 @@ void Dino :: UpdateVelocity(){
 }
 
 void Dino :: Draw(){
-    animationFrames[animationState].Draw(getX(),getY());
-    /* Draw As rectangle for now */
-    //LCD.DrawRectangle((int) getX(), (int) getY(), getWidth(), getHeight());
-}
-
-void Dino :: Erase(){
-    /* Draws current position as black to erase dino 
-    LCD.SetFontColor(WHITE);
-    for (int i = 0; i < TREX_IDLE_HEIGHT; ++i) {
-        for (int j = 0; j < TREX_IDLE_WIDTH; ++j) {
-                LCD.DrawPixel(getX()+j, getY()+i);
-        }
-    }*/
+    animationFrames[animationState].Draw(getX(),getY()); 
+    /* Drawing rectangle to check hitboxes */
+    LCD.DrawRectangle((int) getX(), (int) getY(), getWidth(), getHeight());
 }
 
 void Dino :: UpdateAnimation(int tic) {
@@ -82,7 +73,68 @@ void Dino :: Jump(){
     /* If dino on floor, set velocity to jump value */
     if(getY() == FLOOR_HEIGHT - getHeight()){
         vel = JUMP_VEL * FPS;
+        acc = DEF_DINO_ACC * FPS;
     }
 
     dinoState = DS_JUMP;
+}
+
+void Dino :: Duck(){
+    
+
+    /* If dino on floor */
+    if(getY() == FLOOR_HEIGHT - getHeight()){
+        setY(getY() + (TREX_IDLE_HEIGHT - TREX_DUCK_1_HEIGHT));
+    }
+
+    if(getY() < FLOOR_HEIGHT - getHeight() && dinoState != DS_DUCK){
+        setY(getY() + (TREX_IDLE_HEIGHT - TREX_DUCK_1_HEIGHT));
+    }
+    
+    setHeight(TREX_DUCK_1_HEIGHT);
+    setWidth(TREX_DUCK_1_WIDTH);
+    
+    dinoState = DS_DUCK;
+}
+
+/* For when input is remove from screen, what animation to use */
+void Dino :: Settle(){
+    setHeight(TREX_IDLE_HEIGHT);
+    setWidth(TREX_IDLE_WIDTH);
+
+    /* If beneath floor, set to normal height */
+    if(getLowerBound() > FLOOR_HEIGHT){
+        setY(FLOOR_HEIGHT - TREX_IDLE_HEIGHT);
+    }
+    
+    if(getY() == FLOOR_HEIGHT - getHeight()){
+        dinoState = DS_RUN;
+    } else {
+        dinoState = DS_JUMP;
+    }
+}
+
+void Dino :: IncreaseGravity(){
+    if(acc == 0) { return;}
+    if(acc < MAX_DINO_ACC * FPS){
+        acc += ACC_INC_VAR * FPS;
+    }
+    
+    //std::cout << acc << std::endl;
+}
+
+void Dino :: DecreaseGravity(){
+    if(acc == 0) { return;}
+
+    if(acc > MIN_DINO_ACC * FPS){
+        acc -= ACC_DEC_VAR * FPS;
+    }
+    //std::cout << acc << std::endl;
+
+}
+
+void Dino :: Kill(){
+    dinoState = DS_DEAD;
+    vel = 0;
+    acc = 0;
 }
