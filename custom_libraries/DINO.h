@@ -15,6 +15,14 @@ enum DinoFrame {
     NUM_DF
 };
 
+enum DinoState {
+    DS_IDLE,
+    DS_JUMP,
+    DS_RUN,
+    DS_DUCK,
+    DS_DEAD
+};
+
 class Dino : public Object{
     private:
         /* PosY defined in Object parent */
@@ -23,13 +31,15 @@ class Dino : public Object{
 
         /* Not in use yet, maybe use with draw function? */
         DinoFrame animationState;
+        DinoState dinoState;
         Sprite animationFrames[NUM_DF];
 
     public:
 
         Dino(int w, int h, float x, float y);
         void UpdateVelocity();
-        void UpdatePosition();        
+        void UpdatePosition();   
+        void UpdateAnimation(int tic);     
 
         void Draw();
         void Erase();

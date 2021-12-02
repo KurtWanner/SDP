@@ -10,9 +10,9 @@
 #include <Constants.h>
 #include <Button.h>
 
-void UpdateFrame();
+void UpdateFrame(int tic);
 void ClearFrame();
-void UpdateDinosaur();
+void UpdateDinosaur(int tic);
 void UpdateObstacles();
 void drawMainMenu();
 
@@ -65,12 +65,12 @@ int main() {
             /* Draw floor once until floor animation added */
             LCD.SetFontColor(BLACK);
             LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT);
-
+            int tic = 0;
             while (gameState == GAME) {
 
                 LCD.Update();
                 Sleep(1.0 / FPS);
-                UpdateFrame();
+                UpdateFrame(tic);
 
                 /* Clicking the screen makes dino jump */
                 if(LCD.Touch(&x, &y)){
@@ -78,6 +78,7 @@ int main() {
                     dino.Jump();
                 }
                 // Never end
+                tic++;
             }
         }
         
@@ -86,22 +87,22 @@ int main() {
     return 0;
 }
 
-void UpdateFrame(){
+void UpdateFrame(int tic){
     ClearFrame();
-    UpdateDinosaur();
+    UpdateDinosaur(tic);
     UpdateObstacles();
     //TODO
 }
 
 void ClearFrame() {
-    LCD.SetFontColor(WHITE);
-    LCD.FillRectangle(0, 0, LCD_WIDTH, LCD_HEIGHT);
+    LCD.Clear();
 }
 
-void UpdateDinosaur(){
+void UpdateDinosaur(int tic){
     dino.Erase();
     dino.UpdateVelocity();
     dino.UpdatePosition();
+    dino.UpdateAnimation(tic);
     dino.Draw();
 }
 

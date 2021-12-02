@@ -7,7 +7,8 @@
 Dino :: Dino(int w, int h, float x, float y) :  Object(w, h, x, y),
                                                 vel(0),
                                                 acc(DINO_ACC * FPS),
-                                                animationState(DF_DUCK_1)
+                                                animationState(DF_RUN_1),
+                                                dinoState(DS_RUN)
 {
     animationFrames[DF_IDLE].Init(t_rex_idle, TREX_IDLE_WIDTH, TREX_IDLE_HEIGHT);
     animationFrames[DF_DEAD].Init(t_rex_dead, TREX_DEAD_WIDTH, TREX_DEAD_HEIGHT);
@@ -27,6 +28,7 @@ void Dino :: UpdatePosition(){
     if(getY() + getHeight() > FLOOR_HEIGHT){
         vel = 0;
         setY(FLOOR_HEIGHT - getHeight());
+        dinoState = DS_RUN;
     }
 }
 
@@ -51,10 +53,36 @@ void Dino :: Erase(){
     }*/
 }
 
+void Dino :: UpdateAnimation(int tic) {
+    switch (dinoState)
+    {
+    case DS_JUMP:
+    case DS_IDLE:
+        animationState = DF_IDLE;
+        break;
+    
+    case DS_RUN:
+        animationState = (tic / 3) % 2 ? DF_RUN_1 : DF_RUN_2;
+        break;
+
+    case DS_DUCK:
+        animationState = (tic / 3) % 2 ? DF_DUCK_1 : DF_DUCK_2;
+        break;
+
+    case DS_DEAD:
+        animationState = DF_DEAD;
+    
+    default:
+        break;
+    }
+}
+
 void Dino :: Jump(){
 
     /* If dino on floor, set velocity to jump value */
     if(getY() == FLOOR_HEIGHT - getHeight()){
         vel = JUMP_VEL * FPS;
     }
+
+    dinoState = DS_JUMP;
 }
