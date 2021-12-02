@@ -15,8 +15,14 @@
 #define LCD_HEIGHT 240
 
 /* Game state constants */
-#define MAIN_MENU 0
-#define GAME 1
+enum GameState {
+    GS_MENU,
+    GS_GAME,
+    GS_STATS,
+    GS_CREDITS,
+    GS_HELP,
+    GS_QUIT
+};
 
 /* Width, height, and x position for main menu buttons */
 #define BTN_WIDTH 100

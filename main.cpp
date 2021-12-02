@@ -19,7 +19,7 @@ void drawMainMenu();
 // Dino :)
 Dino dino(15, 15, 50.0, FLOOR_HEIGHT - 15.0);
 
-int gameState = MAIN_MENU;
+GameState gameState = GS_MENU;
 
 /* x and y used for LCD.Touch() */
 float x, y;
@@ -37,36 +37,42 @@ int main() {
     LCD.Clear();
 
     /* To always run */
-    while(1){
+    while(gameState != GS_QUIT){
 
-        if(gameState == MAIN_MENU){
-
+        switch (gameState)
+        {
+        case GS_MENU:
             /* Draw main menu only once */
             drawMainMenu();
 
             /* Continue running until user makes choice */
-            while(gameState == MAIN_MENU){
+            while(gameState == GS_MENU){
                 if(LCD.Touch(&x, &y)){
                     if(playBtn.btnClicked(x, y)){ 
                         printf("Play");
-                        gameState = 1;
+                        gameState = GS_GAME;
                     }
                     /* Testing button collision */
-                    if(statsBtn.btnClicked(x, y)){ printf("Stats");};
-                    if(quitBtn.btnClicked(x, y)){ printf("Quit");};
+                    if(statsBtn.btnClicked(x, y)){ 
+                        printf("Stats");
+                        gameState = GS_STATS;
+                    }
+                    if(quitBtn.btnClicked(x, y)){
+                        printf("Quit");
+                        gameState = GS_QUIT;
+                    };
                 }
             }
-        } 
-
-        if(gameState == GAME){
-
+            break;
+        
+        case GS_GAME:
             LCD.Clear();
 
             /* Draw floor once until floor animation added */
             LCD.SetFontColor(BLACK);
             LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT);
             int tic = 0;
-            while (gameState == GAME) {
+            while (gameState == GS_GAME) {
 
                 LCD.Update();
                 Sleep(1.0 / FPS);
@@ -80,6 +86,9 @@ int main() {
                 // Never end
                 tic++;
             }
+            break;
+
+        
         }
         
     }
