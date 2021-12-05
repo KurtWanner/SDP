@@ -27,7 +27,7 @@ enum GameState {
 /* Width, height, and x position for main menu buttons */
 #define BTN_WIDTH 100
 #define BTN_HEIGHT 30
-#define BTN_X 80.0
+#define BTN_X ((double)(((LCD_WIDTH) - (BTN_WIDTH)) / (2)))
 
 /* Offset for button text */
 #define BTN_TXT_Y 7

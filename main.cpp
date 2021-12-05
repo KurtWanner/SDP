@@ -125,7 +125,7 @@ void UpdateObstacles(){
 void drawMainMenu(){
 
     /* I added a horizontal offset to have the title in the middle of the screen */
-    int horz_offset = 80;
+    int horz_offset = (LCD_WIDTH - TREX_TITLE_WIDTH) / 2;
     title.Draw(horz_offset, 0);
 
     /* Draw all btns to screen */
