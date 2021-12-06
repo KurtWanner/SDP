@@ -40,4 +40,35 @@ extern const unsigned char t_rex_duck_1[TREX_DUCK_1_WIDTH*TREX_DUCK_1_HEIGHT];
 #define TREX_DUCK_2_HEIGHT TREX_DUCK_1_HEIGHT
 extern const unsigned char t_rex_duck_2[TREX_DUCK_2_WIDTH*TREX_DUCK_2_HEIGHT];
 
+#define BIRD_1_WIDTH (21)
+#define BIRD_1_HEIGHT (18)
+extern const unsigned char bird_1[BIRD_1_WIDTH*BIRD_1_HEIGHT];
+
+#define BIRD_2_WIDTH (BIRD_1_WIDTH)
+#define BIRD_2_HEIGHT (BIRD_1_HEIGHT)
+extern const unsigned char bird_2[BIRD_1_WIDTH*BIRD_1_HEIGHT];
+
+#define CACTUS_SMALL_SINGLE_WIDTH (15)
+#define CACTUS_SMALL_SINGLE_HEIGHT (33)
+extern const unsigned char cactus_small_single[CACTUS_SMALL_SINGLE_WIDTH*CACTUS_SMALL_SINGLE_HEIGHT];
+
+#define CACTUS_SMALL_DOUBLE_WIDTH (32)
+#define CACTUS_SMALL_DOUBLE_HEIGHT (CACTUS_SMALL_SINGLE_HEIGHT)
+extern const unsigned char cactus_small_double[CACTUS_SMALL_DOUBLE_WIDTH*CACTUS_SMALL_DOUBLE_HEIGHT];
+
+#define CACTUS_SMALL_TRIPLE_WIDTH (49)
+#define CACTUS_SMALL_TRIPLE_HEIGHT (CACTUS_SMALL_SINGLE_HEIGHT)
+extern const unsigned char cactus_small_triple[CACTUS_SMALL_TRIPLE_WIDTH*CACTUS_SMALL_TRIPLE_HEIGHT];
+
+#define CACTUS_BIG_SINGLE_WIDTH (23)
+#define CACTUS_BIG_SINGLE_HEIGHT (46)
+extern const unsigned char cactus_big_single[CACTUS_BIG_SINGLE_WIDTH*CACTUS_BIG_SINGLE_HEIGHT];
+
+#define CACTUS_BIG_DOUBLE_WIDTH (48)
+#define CACTUS_BIG_DOUBLE_HEIGHT (CACTUS_BIG_SINGLE_HEIGHT)
+extern const unsigned char cactus_big_double[CACTUS_BIG_DOUBLE_WIDTH*CACTUS_BIG_DOUBLE_HEIGHT];
+
+#define CACTUS_BIG_QUAD_WIDTH (73)
+#define CACTUS_BIG_QUAD_HEIGHT (49)
+extern const unsigned char cactus_big_quad[CACTUS_BIG_QUAD_WIDTH*CACTUS_BIG_QUAD_HEIGHT];
 #endif
