@@ -3,7 +3,6 @@
 #include <Constants.h>
 
 void Button :: draw(){
-    LCD.SetFontColor(BLACK);
     LCD.DrawRectangle(getX(), getY(), getWidth(), getHeight());
     LCD.WriteAt(text, getX() + BTN_TXT_X, getY() + BTN_TXT_Y);
 
