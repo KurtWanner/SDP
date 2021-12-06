@@ -210,7 +210,11 @@ int main() {
                 const char * credits_text[] = { "Programmed by", 
                                                 "Kurt Wanner",
                                                 "and",
-                                                "Hunter Seachrist"};
+                                                "Hunter Seachrist",
+                                                "",
+                                                "Graphics by",
+                                                "Unknown Google",
+                                                "Artist"};
 
                 LCD.SetBackgroundColor(BLACK);
                 LCD.SetFontColor(WHITE);
