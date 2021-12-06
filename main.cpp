@@ -18,6 +18,7 @@ void drawMainMenu();
 
 // Dino :)
 Dino dino(15, 15, 50.0, FLOOR_HEIGHT - 15.0);
+Sprite title;
 
 GameState gameState = GS_MENU;
 
@@ -35,6 +36,8 @@ int main() {
     /* Clear background */
     LCD.SetBackgroundColor(WHITE);
     LCD.Clear();
+
+    title.Init(t_rex_title, TREX_TITLE_WIDTH, TREX_TITLE_HEIGHT);
 
     /* To always run */
     while(gameState != GS_QUIT){
@@ -123,13 +126,7 @@ void drawMainMenu(){
 
     /* I added a horizontal offset to have the title in the middle of the screen */
     int horz_offset = 80;
-    for (int i = 0; i < TREX_TITLE_HEIGHT; ++i) {
-        for (int j = horz_offset; j < TREX_TITLE_WIDTH + horz_offset; ++j) {
-            int col = t_rex_title[i * TREX_TITLE_WIDTH + j - horz_offset];
-            LCD.SetFontColor(col ? WHITE : BLACK);
-            LCD.DrawPixel(j, i);
-        }
-    }
+    title.Draw(horz_offset, 0);
 
     /* Draw all btns to screen */
     playBtn.draw();
