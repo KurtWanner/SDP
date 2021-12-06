@@ -20,6 +20,10 @@
 #define LCD_WIDTH 320
 #define LCD_HEIGHT 240
 
+/* Dimensions of a single character on the scree*/
+#define CHAR_WIDTH 12
+#define CHAR_HEIGHT 17
+
 /* Game state constants */
 enum GameState {
     GS_MENU,
@@ -32,9 +36,9 @@ enum GameState {
 };
 
 /* Width, height, and x position for main menu buttons */
-#define BTN_WIDTH 100
+#define BTN_WIDTH 130
 #define BTN_HEIGHT 30
-#define BTN_X 80.0
+#define BTN_X ((double)(((LCD_WIDTH) - (BTN_WIDTH)) / (2)))
 
 /* Offset for button text */
 #define BTN_TXT_Y 7

@@ -1,11 +1,12 @@
-#include <Button.h>
 #include <FEHLCD.h>
-#include <Constants.h>
+
+#include "Constants.h"
+#include "Button.h"
+#include "Util.h"
 
 void Button :: draw(){
-    LCD.SetFontColor(BLACK);
     LCD.DrawRectangle(getX(), getY(), getWidth(), getHeight());
-    LCD.WriteAt(text, getX() + BTN_TXT_X, getY() + BTN_TXT_Y);
+    LCD.WriteAt(text, getX() + (getWidth() - (CHAR_WIDTH * StringLength(text))) / 2, getY() + BTN_TXT_Y);
 
 }
 

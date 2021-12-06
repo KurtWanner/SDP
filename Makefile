@@ -15,7 +15,7 @@ INC_DIRS = -I$(LIB_DIR) -I. -I$(CUS_DIR)
 # Add new Class to this list
 OBJS = $(LIB_DIR)/FEHLCD.o $(LIB_DIR)/FEHRandom.o $(LIB_DIR)/FEHSD.o $(LIB_DIR)/FEHUtility.o \
 		$(LIB_DIR)/tigr.o $(CUS_DIR)/OBJECT.o $(CUS_DIR)/DINO.o $(CUS_DIR)/OBSTACLE.o \
-		$(CUS_DIR)/Button.o $(CUS_DIR)/Graphics.o
+		$(CUS_DIR)/Button.o $(CUS_DIR)/Graphics.o $(CUS_DIR)/Util.o
 
 ifeq ($(OS),Windows_NT)
 	LDFLAGS = -lopengl32 -lgdi32
