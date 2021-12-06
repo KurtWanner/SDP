@@ -143,7 +143,7 @@ int main() {
                 float x, y;
                 DrawGameOver();
                 while(!LCD.Touch(&x, &y) || tic < 10){ tic++; }
-                gameState = GS_GAME;
+                gameState = GS_MENU;
                 break;
             }
 
