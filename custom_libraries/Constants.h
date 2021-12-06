@@ -20,6 +20,10 @@
 #define LCD_WIDTH 320
 #define LCD_HEIGHT 240
 
+/* Dimensions of a single character on the scree*/
+#define CHAR_WIDTH 12
+#define CHAR_HEIGHT 17
+
 /* Game state constants */
 enum GameState {
     GS_MENU,

@@ -34,8 +34,9 @@ float x, y;
 
 /* Initilize buttons for main menu */
 Button playBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 50.0, "Play");
-Button statsBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 100.0, "Stats");
-Button quitBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 150.0, "Quit");
+Button helpBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 100.0, "Help");
+Button statsBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 150.0, "Stats");
+Button quitBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 200.0, "Quit");
 
 
 int main() {
@@ -53,90 +54,120 @@ int main() {
         {
         case GS_MENU:
             {
-            /* Draw main menu only once */
-            drawMainMenu();
+                /* Draw main menu only once */
+                drawMainMenu();
 
-            /* Continue running until user makes choice */
-            while(gameState == GS_MENU){
-                if(LCD.Touch(&x, &y)){
-                    if(playBtn.btnClicked(x, y)){ 
-                        printf("Play");
-                        gameState = GS_GAME;
+                /* Continue running until user makes choice */
+                while(gameState == GS_MENU){
+                    if(LCD.Touch(&x, &y)){
+                        if(playBtn.btnClicked(x, y)){ 
+                            printf("Play");
+                            gameState = GS_GAME;
+                        }
+                        /* Testing button collision */
+                        if(statsBtn.btnClicked(x, y)){ 
+                            printf("Stats");
+                            gameState = GS_STATS;
+                        }
+                        if(quitBtn.btnClicked(x, y)){
+                            printf("Quit");
+                            gameState = GS_QUIT;
+                        }
+                        if(helpBtn.btnClicked(x, y)){
+                            printf("Help");
+                            gameState = GS_HELP;
+                        }
                     }
-                    /* Testing button collision */
-                    if(statsBtn.btnClicked(x, y)){ 
-                        printf("Stats");
-                        gameState = GS_STATS;
-                    }
-                    if(quitBtn.btnClicked(x, y)){
-                        printf("Quit");
-                        gameState = GS_QUIT;
-                    };
                 }
+                break;
             }
-            }
-            break;
 
             
         
         case GS_GAME:
             {
-            LCD.Clear();
+                LCD.Clear();
 
-            /* Draw floor once until floor animation added */
-            LCD.SetFontColor(BLACK);
-            ResetDino();
-            ResetObstacles();
+                /* Draw floor once until floor animation added */
+                LCD.SetFontColor(BLACK);
+                ResetDino();
+                ResetObstacles();
 
-            int tic = 0;
-            while (gameState == GS_GAME) {
+                int tic = 0;
+                while (gameState == GS_GAME) {
 
-                LCD.Update();
-                Sleep(1.0 / FPS);
-                UpdateFrame(tic);
+                    LCD.Update();
+                    Sleep(1.0 / FPS);
+                    UpdateFrame(tic);
 
 
-                /* Clicking the screen makes dino jump */
-                /* Added tic requirement so dino doesn't immediately jump on game starting */
-                if(LCD.Touch(&x, &y) && tic > 10){ 
-                    //printf("Touch\n");
-                    if(y < FLOOR_HEIGHT){
-                        dino.Jump();
-                        dino.DecreaseGravity();
+                    /* Clicking the screen makes dino jump */
+                    /* Added tic requirement so dino doesn't immediately jump on game starting */
+                    if(LCD.Touch(&x, &y) && tic > 10){ 
+                        //printf("Touch\n");
+                        if(y < FLOOR_HEIGHT){
+                            dino.Jump();
+                            dino.DecreaseGravity();
+                        } else {
+                            dino.Duck();
+                            dino.IncreaseGravity();
+                        }
                     } else {
-                        dino.Duck();
-                        dino.IncreaseGravity();
+                        /* Chooses animation state */
+                        dino.Settle();
                     }
-                } else {
-                    /* Chooses animation state */
-                    dino.Settle();
-                }
 
-                /* Check collision with obstacles */
-                if(CheckCollisions()){ 
-                    gameState = GS_GAMEOVER;
-                    dino.Kill();
-                    UpdateDinosaur(tic);
-                }
+                    /* Check collision with obstacles */
+                    if(CheckCollisions()){ 
+                        gameState = GS_GAMEOVER;
+                        dino.Kill();
+                        UpdateDinosaur(tic);
+                    }
 
-                // Never end
-                tic++;
+                    // Never end
+                    tic++;
+                }
+                break;
             }
-            }
-            break;
             
 
         case GS_GAMEOVER:
             {
-            int tic = 0;
-            float x, y;
-            DrawGameOver();
-            while(!LCD.Touch(&x, &y) || tic < 10){ tic++; }
-            gameState = GS_GAME;
+                int tic = 0;
+                float x, y;
+                DrawGameOver();
+                while(!LCD.Touch(&x, &y) || tic < 10){ tic++; }
+                gameState = GS_GAME;
+                break;
+            }
 
+        case GS_HELP:
+            {
+                Button backBtn(BTN_WIDTH, BTN_HEIGHT, LCD_WIDTH-BTN_WIDTH-2.0, LCD_HEIGHT-BTN_HEIGHT-2.0, "Back"); // Define button
+                const char * help_title =   "Instructions";
+                const char * help_instr =   "Press top half of screen \n to jump over obstacles.\n\n"
+                                            "Press Bottom half of \n screen to duck.\n\n"
+                                            "Go as far as you can!";
+                
+                
+                LCD.SetBackgroundColor(BLACK);
+                LCD.SetFontColor(WHITE);
+                LCD.Clear();
+
+                // TODO: Is strlen available on Proteus Hardware?
+                LCD.WriteAt(help_title, (LCD_WIDTH - (CHAR_WIDTH * strlen(help_title)))/2, 0);
+                LCD.DrawLine(0, CHAR_HEIGHT + 2, LCD_WIDTH, CHAR_HEIGHT);
+                LCD.Write("\n\n\n");
+                LCD.Write(help_instr);//, 0, CHAR_HEIGHT + 4);
+                while (gameState == GS_HELP) {
+                    backBtn.draw();
+                    int x, y;
+                    if (LCD.Touch(&x, &y) && backBtn.btnClicked(x, y)) {
+                        gameState = GS_MENU;
+                    }
+                }
             }
             break;
-            
         }
         
     }
@@ -144,7 +175,7 @@ int main() {
     return 0;
 }
 
-void UpdateFrame(int tic){
+void UpdateFrame(int tic) {
     ClearFrame();
     UpdateDinosaur(tic); 
     UpdateObstacles();
@@ -186,6 +217,9 @@ bool CheckCollisions(){
 }
 
 void drawMainMenu(){
+    LCD.SetBackgroundColor(WHITE);
+    LCD.SetFontColor(BLACK);
+    LCD.Clear();
 
     /* I added a horizontal offset to have the title in the middle of the screen */
     int horz_offset = (LCD_WIDTH - TREX_TITLE_WIDTH) / 2;
@@ -193,6 +227,7 @@ void drawMainMenu(){
 
     /* Draw all btns to screen */
     playBtn.draw();
+    helpBtn.draw();
     statsBtn.draw();
     quitBtn.draw();
 }
