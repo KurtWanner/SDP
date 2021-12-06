@@ -4,12 +4,14 @@
 #include <LCDColors.h>
 #include <FEHRandom.h>
 #include <tigr.h>
+
 #include "OBJECT.h"
-#include <Dino.h>
+#include "Dino.h"
 #include "Graphics.h"
-#include <Constants.h>
-#include <Button.h>
-#include <OBSTACLE.h>
+#include "Constants.h"
+#include "Button.h"
+#include "OBSTACLE.h"
+#include "Util.h"
 
 void UpdateFrame(int tic);
 void ClearFrame();
@@ -20,6 +22,9 @@ bool CheckCollisions();
 void DrawGameOver();
 void ResetDino();
 void ResetObstacles();
+
+// WriteTextArray is used since LCD.WriteLine doesn't reset the row that it is on when the screen clears
+void WriteTextArray(const char **, int);
 
 
 Sprite title;
@@ -33,9 +38,10 @@ GameState gameState = GS_MENU;
 float x, y;
 
 /* Initilize buttons for main menu */
-Button playBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 50.0, "Play");
-Button helpBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 100.0, "Help");
-Button statsBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 150.0, "Stats");
+Button playBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 40.0, "Play");
+Button helpBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 80.0, "Help");
+Button statsBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 120.0, "Stats");
+Button creditsBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 160.0, "Credits");
 Button quitBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 200.0, "Quit");
 
 
@@ -60,21 +66,20 @@ int main() {
                 /* Continue running until user makes choice */
                 while(gameState == GS_MENU){
                     if(LCD.Touch(&x, &y)){
-                        if(playBtn.btnClicked(x, y)){ 
-                            printf("Play");
+                        if(playBtn.btnClicked(x, y)){
                             gameState = GS_GAME;
                         }
                         /* Testing button collision */
-                        if(statsBtn.btnClicked(x, y)){ 
-                            printf("Stats");
+                        if(statsBtn.btnClicked(x, y)){
                             gameState = GS_STATS;
                         }
                         if(quitBtn.btnClicked(x, y)){
-                            printf("Quit");
                             gameState = GS_QUIT;
                         }
+                        if (creditsBtn.btnClicked(x, y)){
+                            gameState = GS_CREDITS;
+                        }
                         if(helpBtn.btnClicked(x, y)){
-                            printf("Help");
                             gameState = GS_HELP;
                         }
                     }
@@ -89,6 +94,7 @@ int main() {
                 LCD.Clear();
 
                 /* Draw floor once until floor animation added */
+                LCD.SetBackgroundColor(WHITE);
                 LCD.SetFontColor(BLACK);
                 ResetDino();
                 ResetObstacles();
@@ -145,20 +151,24 @@ int main() {
             {
                 Button backBtn(BTN_WIDTH, BTN_HEIGHT, LCD_WIDTH-BTN_WIDTH-2.0, LCD_HEIGHT-BTN_HEIGHT-2.0, "Back"); // Define button
                 const char * help_title =   "Instructions";
-                const char * help_instr =   "Press top half of screen \n to jump over obstacles.\n\n"
-                                            "Press Bottom half of \n screen to duck.\n\n"
-                                            "Go as far as you can!";
+                const char * help_instr[] = {   "Press top half of screen", 
+                                                "to jump over obstacles.",
+                                                "",
+                                                "Press Bottom half of ",
+                                                "screen to duck.",
+                                                "",
+                                                "Go as far as you can!"};
                 
                 
                 LCD.SetBackgroundColor(BLACK);
                 LCD.SetFontColor(WHITE);
                 LCD.Clear();
+                LCD.ClearBuffer();
 
-                // TODO: Is strlen available on Proteus Hardware?
-                LCD.WriteAt(help_title, (LCD_WIDTH - (CHAR_WIDTH * strlen(help_title)))/2, 0);
+                LCD.WriteAt(help_title, (LCD_WIDTH - (CHAR_WIDTH * (StringLength(help_title) - 1))) / 2, 0);
                 LCD.DrawLine(0, CHAR_HEIGHT + 2, LCD_WIDTH, CHAR_HEIGHT);
-                LCD.Write("\n\n\n");
-                LCD.Write(help_instr);//, 0, CHAR_HEIGHT + 4);
+                WriteTextArray(help_instr, ARRAY_SIZE(help_instr));
+
                 while (gameState == GS_HELP) {
                     backBtn.draw();
                     int x, y;
@@ -168,6 +178,59 @@ int main() {
                 }
             }
             break;
+        
+        case GS_STATS:
+            {
+                Button backBtn(BTN_WIDTH, BTN_HEIGHT, LCD_WIDTH-BTN_WIDTH-2.0, LCD_HEIGHT-BTN_HEIGHT-2.0, "Back"); // Define button
+                const char * stats_title =   "High Scores";
+
+                LCD.SetBackgroundColor(BLACK);
+                LCD.SetFontColor(WHITE);
+                LCD.Clear();
+
+                LCD.WriteAt(stats_title, (LCD_WIDTH - (CHAR_WIDTH * (StringLength(stats_title) - 1))) / 2, 0);
+                LCD.DrawLine(0, CHAR_HEIGHT + 2, LCD_WIDTH, CHAR_HEIGHT);
+                LCD.Write("\n\n\n");
+                
+                while (gameState == GS_STATS) {
+                    backBtn.draw();
+                    int x, y;
+                    if (LCD.Touch(&x, &y) && backBtn.btnClicked(x, y)) {
+                        gameState = GS_MENU;
+                    }
+                }
+
+                break;
+            }
+        
+        case GS_CREDITS:
+            {
+                Button backBtn(BTN_WIDTH, BTN_HEIGHT, LCD_WIDTH-BTN_WIDTH-2.0, LCD_HEIGHT-BTN_HEIGHT-2.0, "Back"); // Define button
+                const char * credits_title =    "Credits";
+                const char * credits_text[] = { "Programmed by", 
+                                                "Kurt Wanner",
+                                                "and",
+                                                "Hunter Seachrist"};
+
+                LCD.SetBackgroundColor(BLACK);
+                LCD.SetFontColor(WHITE);
+                LCD.Clear();
+
+                LCD.WriteAt(credits_title, (LCD_WIDTH - (CHAR_WIDTH * (StringLength(credits_title) - 1))) / 2, 0);
+                LCD.DrawLine(0, CHAR_HEIGHT + 2, LCD_WIDTH, CHAR_HEIGHT);
+                LCD.Write("\n\n\n");
+                WriteTextArray(credits_text, ARRAY_SIZE(credits_text));
+                
+                while (gameState == GS_CREDITS) {
+                    backBtn.draw();
+                    int x, y;
+                    if (LCD.Touch(&x, &y) && backBtn.btnClicked(x, y)) {
+                        gameState = GS_MENU;
+                    }
+                }
+
+                break;
+            }
         }
         
     }
@@ -230,6 +293,7 @@ void drawMainMenu(){
     helpBtn.draw();
     statsBtn.draw();
     quitBtn.draw();
+    creditsBtn.draw();
 }
 
 void DrawGameOver(){
@@ -241,4 +305,10 @@ void DrawGameOver(){
     /* Added floor line for reference */
     LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE
     LCD.Update();
+}
+
+void WriteTextArray(const char **str, int size){
+    for (int i = 0; i < size; ++i) {
+        LCD.WriteAt(str[i], (LCD_WIDTH - (CHAR_WIDTH * (StringLength(str[i]) - 1))) / 2, CHAR_HEIGHT * (i + 2));
+    }
 }
