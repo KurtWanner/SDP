@@ -41,7 +41,7 @@ void Dino :: UpdateVelocity(){
 void Dino :: Draw(){
     animationFrames[animationState].Draw(getX(),getY()); 
     /* Drawing rectangle to check hitboxes */
-    LCD.DrawRectangle((int) getX(), (int) getY(), getWidth(), getHeight());
+    //LCD.DrawRectangle((int) getX(), (int) getY(), getWidth(), getHeight());
 }
 
 void Dino :: UpdateAnimation(int tic) {

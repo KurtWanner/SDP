@@ -88,7 +88,7 @@ int main() {
             while (gameState == GS_GAME) {
 
                 LCD.Update();
-                Sleep(1.0 / FPS);
+                //Sleep(1.0 / FPS);
                 UpdateFrame(tic);
 
 
