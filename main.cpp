@@ -16,11 +16,12 @@
 void UpdateFrame(int tic);
 void ClearFrame();
 void UpdateDinosaur(int tic);
-void UpdateObstacles();
+void UpdateObstacles(int tic);
 void drawMainMenu();
 bool CheckCollisions();
 void DrawGameOver();
 void ResetDino();
+void SpawnObstacle();
 void ResetObstacles();
 
 // WriteTextArray is used since LCD.WriteLine doesn't reset the row that it is on when the screen clears
@@ -29,8 +30,8 @@ void WriteTextArray(const char **, int);
 
 Sprite title;
 // Dino :)
-Dino dino(TREX_IDLE_WIDTH, TREX_IDLE_HEIGHT, 50.0, FLOOR_HEIGHT - TREX_IDLE_HEIGHT);
-Obstacle cactus(15, 15, LCD_WIDTH, FLOOR_HEIGHT - 40);
+Dino dino(DINO_HIT_WIDTH, TREX_IDLE_HEIGHT, 50.0, FLOOR_HEIGHT - TREX_IDLE_HEIGHT);
+Obstacle obstacles[OBSTACLE_LIST_SIZE];
 
 GameState gameState = GS_MENU;
 
@@ -50,6 +51,7 @@ int main() {
     /* Clear background */
     LCD.SetBackgroundColor(WHITE);
     LCD.Clear();
+    Random.Seed();
 
     title.Init(t_rex_title, TREX_TITLE_WIDTH, TREX_TITLE_HEIGHT);
 
@@ -62,7 +64,7 @@ int main() {
             {
                 /* Draw main menu only once */
                 drawMainMenu();
-
+                while (LCD.Touch(&x, &y));
                 /* Continue running until user makes choice */
                 while(gameState == GS_MENU){
                     if(LCD.Touch(&x, &y)){
@@ -130,6 +132,14 @@ int main() {
                         UpdateDinosaur(tic);
                     }
 
+                    // Attempt to perform spawn thrice a frame
+                    if (!(tic % (FPS/3))) {
+                        // 1 in 3 chance of spawn
+                        if (Random.RandInt() % 3) {
+                            SpawnObstacle();
+                        }
+                    }
+
                     // Never end
                     tic++;
                 }
@@ -142,6 +152,7 @@ int main() {
                 int tic = 0;
                 float x, y;
                 DrawGameOver();
+                while(LCD.Touch(&x, &y) || tic < 10){ tic++; }
                 while(!LCD.Touch(&x, &y) || tic < 10){ tic++; }
                 gameState = GS_MENU;
                 break;
@@ -150,7 +161,7 @@ int main() {
         case GS_HELP:
             {
                 Button backBtn(BTN_WIDTH, BTN_HEIGHT, LCD_WIDTH-BTN_WIDTH-2.0, LCD_HEIGHT-BTN_HEIGHT-2.0, "Back"); // Define button
-                const char * help_title =   "Instructions";
+                const char * help_title = "Instructions";
                 const char * help_instr[] = {   "Press top half of screen", 
                                                 "to jump over obstacles.",
                                                 "",
@@ -182,7 +193,7 @@ int main() {
         case GS_STATS:
             {
                 Button backBtn(BTN_WIDTH, BTN_HEIGHT, LCD_WIDTH-BTN_WIDTH-2.0, LCD_HEIGHT-BTN_HEIGHT-2.0, "Back"); // Define button
-                const char * stats_title =   "High Scores";
+                const char * stats_title = "High Scores";
 
                 LCD.SetBackgroundColor(BLACK);
                 LCD.SetFontColor(WHITE);
@@ -245,7 +256,7 @@ int main() {
 void UpdateFrame(int tic) {
     ClearFrame();
     UpdateDinosaur(tic); 
-    UpdateObstacles();
+    UpdateObstacles(tic);
 
     /* Added floor line for reference */
     LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE
@@ -263,24 +274,61 @@ void UpdateDinosaur(int tic){
     dino.Draw();
 }
 
-void UpdateObstacles(){
-    cactus.UpdatePosition();
-    cactus.Draw();
+void UpdateObstacles(int tic){
+    for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
+        obstacles[i].UpdatePosition();
+        obstacles[i].UpdateAnimation(tic);
+        obstacles[i].Draw();
+    }
 }
 
 void ResetDino(){
     dino.setHeight(TREX_IDLE_HEIGHT);
-    dino.setWidth(TREX_IDLE_WIDTH);
+    dino.setWidth(DINO_HIT_WIDTH);
     dino.setY(FLOOR_HEIGHT - TREX_IDLE_HEIGHT);
     dino.Settle();
 }
 
+void SpawnObstacle() {
+    for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
+        if (obstacles[i].getType() == OT_NONE) {
+            if (Random.RandInt() % 8) {
+                obstacles[i].setType(OT_CACTUS);
+                ObstacleSprite type = (ObstacleSprite) (Random.RandInt() % (NUM_OBST_SPRITES - 2));
+                obstacles[i].setSprite(type);
+                obstacles[i].setWidth(obstacle_sprite_widths[type]);
+                obstacles[i].setHeight(obstacle_sprite_heights[type]);
+
+                obstacles[i].setX(LCD_WIDTH - obstacles[i].getWidth());
+                obstacles[i].setY(FLOOR_HEIGHT - obstacles[i].getHeight() + 1);
+                return;
+            } else {
+                obstacles[i].setType(OT_BIRD);
+                obstacles[i].setSprite(OS_BIRD_1);
+                obstacles[i].setWidth(BIRD_HIT_WIDTH);
+                obstacles[i].setHeight(BIRD_HIT_HEIGHT);
+
+                obstacles[i].setX(LCD_WIDTH - obstacles[i].getWidth());
+                obstacles[i].setY(LCD_WIDTH - FLOOR_HEIGHT - obstacles[i].getHeight() - BIRD_FLY_HEIGHT);
+                return;
+            }
+        }
+    }
+
+    return;
+}
+
 void ResetObstacles(){
-    cactus.setX(LCD_WIDTH);
+    for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
+        obstacles[i].Reset();
+    }
 }
 
 bool CheckCollisions(){
-    return dino.collision(cactus);
+    for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
+        if (dino.collision(obstacles[i])) return true;
+    }
+    return false;
 }
 
 void drawMainMenu(){
@@ -304,7 +352,10 @@ void DrawGameOver(){
     ClearFrame();
     dino.UpdateAnimation(0);
     dino.Draw();
-    cactus.Draw();
+
+    for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i){
+        obstacles[i].Draw();
+    }
     
     /* Added floor line for reference */
     LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE

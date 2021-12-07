@@ -32,7 +32,7 @@ OBJ_FILES := $(patsubst ./%.cpp,./%.o,$(SRC_FILES))
 $(EXEC): $(OBJ_FILES) $(OBJS)
 	$(CC) $(CPPFLAGS) $(WARNINGS) $(INC_DIRS) $(OBJ_FILES) $(OBJS) -o $(EXEC) $(LDFLAGS)
 
-./%.o: ./%.cpp
+./%.o: ./%.cpp $(wildcard $(CUS_DIR)/*.h)
 	$(CC) $(CPPFLAGS) $(WARNINGS) $(INC_DIRS) -c -o $@ $<
 
 clean:

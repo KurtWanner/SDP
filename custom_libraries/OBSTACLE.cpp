@@ -6,21 +6,47 @@
 #include "OBSTACLE.h"
 
 void Obstacle :: UpdatePosition(){
-    setX(getX() - vel/FPS);
-    if(getX() < 0){
-        setX(LCD_WIDTH);
+    if (type != OT_NONE) {
+        setX(getX() - vel/FPS);
+        if(getX() < 0){
+            Reset();
+        }
     }
 }
 
+void Obstacle :: Reset() {
+    setWidth(0);
+    setHeight(0);
+    setX(LCD_WIDTH);
+    setY(0);
+
+    type = OT_NONE;
+    spriteType = OS_CACT_SMALL_ONE;
+}
+
 void Obstacle :: Draw(){
-    /* Draw as rectangle for now */
-    //setSprite(OS_BIRD_1);
-    LCD.DrawRectangle(getX(), getY(), getWidth(), getHeight());
-    //sprite.Draw(getX(), getY());
+    if (type != OT_NONE) {
+        //LCD.DrawRectangle(getX(), getY(), getWidth(), getHeight());
+        sprite.Draw(getX(), getY());
+    }
 }
 
 void Obstacle :: setSprite(ObstacleSprite t) {
     sprite.Init(obstacle_sprite_list[t], obstacle_sprite_widths[t], obstacle_sprite_heights[t]);
+}
+
+ObstacleType Obstacle :: getType() {
+    return type;
+}
+
+void Obstacle :: setType(ObstacleType t) {
+    type = t;
+}
+
+void Obstacle :: UpdateAnimation(int tic) {
+    if (type == OT_BIRD) {
+        spriteType = (tic / 10) % 2 ? OS_BIRD_1 : OS_BIRD_2;
+    }
 }
 
 const unsigned char *obstacle_sprite_list[NUM_OBST_SPRITES] {

@@ -5,8 +5,9 @@
 #include "Constants.h"
 
 enum ObstacleType {
+    OT_NONE,
     OT_CACTUS,
-    OT_BIRD
+    OT_BIRD,
 };
 
 enum ObstacleSprite {
@@ -26,15 +27,22 @@ class Obstacle : public Object{
         ObstacleType type;
         ObstacleSprite spriteType;
         Sprite sprite;
-        int vel = 4 * FPS;
-
-        void setSprite(ObstacleSprite);
+        int vel = 8 * FPS;
     public:
         /* Constructor inhereted from Object */
-        Obstacle(int w, int h, float x, float y) : Object(w, h, x, y) {}
+        Obstacle(int w, int h, float x, float y) :  Object(w, h, x, y), 
+                                                    type(OT_NONE){}
         
+        Obstacle() :    Object(0, 0, 0, 0), 
+                        type(OT_NONE){}
+
         void UpdatePosition();
         void Draw();
+        void UpdateAnimation(int tic);
+        void Reset();
+        ObstacleType getType();
+        void setType(ObstacleType t);
+        void setSprite(ObstacleSprite);
 };
 
 extern const unsigned char *obstacle_sprite_list[NUM_OBST_SPRITES];

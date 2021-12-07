@@ -76,6 +76,9 @@ void Dino :: Jump(){
         acc = DEF_DINO_ACC * FPS;
     }
 
+    setHeight(TREX_IDLE_HEIGHT);
+    setWidth(DINO_HIT_WIDTH);
+
     dinoState = DS_JUMP;
 }
 
@@ -100,7 +103,7 @@ void Dino :: Duck(){
 /* For when input is remove from screen, what animation to use */
 void Dino :: Settle(){
     setHeight(TREX_IDLE_HEIGHT);
-    setWidth(TREX_IDLE_WIDTH);
+    setWidth(DINO_HIT_WIDTH);
 
     /* If beneath floor, set to normal height */
     if(getLowerBound() > FLOOR_HEIGHT){
