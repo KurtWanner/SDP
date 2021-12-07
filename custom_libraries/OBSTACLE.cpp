@@ -46,6 +46,7 @@ void Obstacle :: setType(ObstacleType t) {
 void Obstacle :: UpdateAnimation(int tic) {
     if (type == OT_BIRD) {
         spriteType = (tic / 10) % 2 ? OS_BIRD_1 : OS_BIRD_2;
+        sprite.Init(obstacle_sprite_list[spriteType], obstacle_sprite_widths[spriteType], obstacle_sprite_heights[spriteType]);
     }
 }
 

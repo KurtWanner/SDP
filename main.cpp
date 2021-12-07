@@ -12,6 +12,7 @@
 #include "Button.h"
 #include "OBSTACLE.h"
 #include "Util.h"
+#include "Ground.h"
 
 void UpdateFrame(int tic);
 void ClearFrame();
@@ -32,6 +33,7 @@ Sprite title;
 // Dino :)
 Dino dino(DINO_HIT_WIDTH, TREX_IDLE_HEIGHT, 50.0, FLOOR_HEIGHT - TREX_IDLE_HEIGHT);
 Obstacle obstacles[OBSTACLE_LIST_SIZE];
+Ground ground;
 
 GameState gameState = GS_MENU;
 
@@ -258,8 +260,11 @@ void UpdateFrame(int tic) {
     UpdateDinosaur(tic); 
     UpdateObstacles(tic);
 
+    ground.UpdateGround(8);
+
     /* Added floor line for reference */
-    LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE
+    // LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE
+    ground.DrawGround();
     //TODO
 }
 
@@ -358,7 +363,8 @@ void DrawGameOver(){
     }
     
     /* Added floor line for reference */
-    LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE
+    // LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE
+    ground.DrawGround();
     LCD.Update();
 }
 

@@ -7,7 +7,7 @@
 #define DINO_HIT_WIDTH 11
 
 #define JUMP_VEL -13
-#define MAX_DINO_ACC 120
+#define MAX_DINO_ACC 150
 #define DEF_DINO_ACC 80
 #define MIN_DINO_ACC 50
 
@@ -22,7 +22,7 @@
 #define LCD_WIDTH 320
 #define LCD_HEIGHT 240
 
-/* Dimensions of a single character on the scree*/
+/* Dimensions of a single character on the screen*/
 #define CHAR_WIDTH 12
 #define CHAR_HEIGHT 17
 

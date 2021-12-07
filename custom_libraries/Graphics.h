@@ -1,6 +1,8 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#include "Constants.h"
+
 class Sprite {
 public:
     const unsigned char *pixels;
@@ -71,4 +73,8 @@ extern const unsigned char cactus_big_double[CACTUS_BIG_DOUBLE_WIDTH*CACTUS_BIG_
 #define CACTUS_BIG_QUAD_WIDTH (73)
 #define CACTUS_BIG_QUAD_HEIGHT (49)
 extern const unsigned char cactus_big_quad[CACTUS_BIG_QUAD_WIDTH*CACTUS_BIG_QUAD_HEIGHT];
+
+#define GROUND_WIDTH LCD_WIDTH
+#define GROUND_HEIGHT (8)
+extern const unsigned char ground_sprite[GROUND_WIDTH*GROUND_HEIGHT];
 #endif
