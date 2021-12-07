@@ -7,6 +7,10 @@
 #define DINO_HIT_WIDTH 2
 #define DINO_X_OFFSET 5
 
+/* Dino X position */
+#define DINO_X_POS 40
+
+/* Dino Gravity Variables */
 #define JUMP_VEL -13
 #define MAX_DINO_ACC 150
 #define DEF_DINO_ACC 80

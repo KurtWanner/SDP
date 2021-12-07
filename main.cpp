@@ -36,7 +36,7 @@ void WriteTextArray(const char **, int);
 Sprite title;
 
 /* Dinosaur :) */
-Dino dino(DINO_HIT_WIDTH, TREX_IDLE_HEIGHT, 30.0 + DINO_X_OFFSET, FLOOR_HEIGHT - TREX_IDLE_HEIGHT);
+Dino dino(DINO_HIT_WIDTH, TREX_IDLE_HEIGHT, DINO_X_POS + DINO_X_OFFSET, FLOOR_HEIGHT - TREX_IDLE_HEIGHT);
 
 /* Obstacle list */
 Obstacle obstacles[OBSTACLE_LIST_SIZE];
