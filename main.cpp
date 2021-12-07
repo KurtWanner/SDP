@@ -13,6 +13,7 @@
 #include "OBSTACLE.h"
 #include "Util.h"
 #include "Ground.h"
+#include "Statistics.h"
 
 void UpdateFrame(int tic, int speed);
 void ClearFrame();
@@ -20,10 +21,11 @@ void UpdateDinosaur(int tic);
 void UpdateObstacles(int tic, int speed);
 void drawMainMenu();
 bool CheckCollisions();
-void DrawGameOver();
+void DrawGameOver(bool);
 void ResetDino();
 void SpawnObstacle();
 void ResetObstacles();
+void PrintScore();
 
 // WriteTextArray is used since LCD.WriteLine doesn't reset the row that it is on when the screen clears
 void WriteTextArray(const char **, int);
@@ -34,6 +36,9 @@ Sprite title;
 Dino dino(DINO_HIT_WIDTH, TREX_IDLE_HEIGHT, 30.0 + DINO_X_OFFSET, FLOOR_HEIGHT - TREX_IDLE_HEIGHT);
 Obstacle obstacles[OBSTACLE_LIST_SIZE];
 Ground ground;
+
+int score = 1;
+Statistics stats;
 
 GameState gameState = GS_MENU;
 
@@ -104,7 +109,7 @@ int main() {
                 ResetObstacles();
 
                 int speed = START_SPEED;
-                int score = 1;
+                score = 1;                
 
                 int tic = 0;
                 while (gameState == GS_GAME) {
@@ -159,9 +164,14 @@ int main() {
 
         case GS_GAMEOVER:
             {
-                int tic = 0;
+                int tic = 0, place = stats.GetScorePlacing(score);
                 float x, y;
-                DrawGameOver();
+                bool newHighscore = false;
+                if (place != -1) {
+                    newHighscore = place == 0;
+                    stats.Insert(score, place);
+                }
+                DrawGameOver(newHighscore);
                 while(LCD.Touch(&x, &y) || tic < 10){ tic++; }
                 while(!LCD.Touch(&x, &y) || tic < 10){ tic++; }
                 gameState = GS_MENU;
@@ -212,6 +222,12 @@ int main() {
                 LCD.WriteAt(stats_title, (LCD_WIDTH - (CHAR_WIDTH * (StringLength(stats_title) - 1))) / 2, 0);
                 LCD.DrawLine(0, CHAR_HEIGHT + 2, LCD_WIDTH, CHAR_HEIGHT);
                 LCD.Write("\n\n\n");
+
+                for (int i = 0; i < NUM_HI_SCORES; ++i) {
+                    LCD.WriteAt(i + 1, 0, CHAR_HEIGHT * (i + 3));
+                    LCD.WriteAt(". ", 1 * CHAR_WIDTH, CHAR_HEIGHT * (i + 3));
+                    LCD.WriteAt(stats.getScore(i), 3 * CHAR_WIDTH, CHAR_HEIGHT * (i + 3));
+                }
                 
                 while (gameState == GS_STATS) {
                     backBtn.draw();
@@ -266,6 +282,9 @@ int main() {
 void UpdateFrame(int tic, int speed) {
     ClearFrame();
 
+    // Print Score
+    PrintScore();
+
     UpdateDinosaur(tic); 
     UpdateObstacles(tic, speed);
 
@@ -275,6 +294,12 @@ void UpdateFrame(int tic, int speed) {
     // LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE
     ground.DrawGround();
     //TODO
+}
+
+void PrintScore() {
+    const char *scoreText = "Score: ";
+    LCD.WriteAt(scoreText, 0, 0);
+    LCD.WriteAt(score, CHAR_WIDTH * (StringLength(scoreText) - 1), 0);
 }
 
 void ClearFrame() {
@@ -363,7 +388,7 @@ void drawMainMenu(){
     creditsBtn.draw();
 }
 
-void DrawGameOver(){
+void DrawGameOver(bool newHighscore){
     ClearFrame();
     dino.UpdateAnimation(0);
     dino.Draw();
@@ -375,6 +400,12 @@ void DrawGameOver(){
     /* Added floor line for reference */
     // LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE
     ground.DrawGround();
+    if (newHighscore) {
+        const char *highScoreText = "NEW HIGH SCORE!";
+        const int offset = 4;
+        LCD.WriteAt(highScoreText, (LCD_WIDTH - (CHAR_WIDTH * (StringLength(highScoreText) - 1))) / 2, FLOOR_HEIGHT + GROUND_HEIGHT + offset);
+    }
+    PrintScore();
     LCD.Update();
 }
 
