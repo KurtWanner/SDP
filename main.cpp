@@ -14,10 +14,10 @@
 #include "Util.h"
 #include "Ground.h"
 
-void UpdateFrame(int tic);
+void UpdateFrame(int tic, int speed);
 void ClearFrame();
 void UpdateDinosaur(int tic);
-void UpdateObstacles(int tic);
+void UpdateObstacles(int tic, int speed);
 void drawMainMenu();
 bool CheckCollisions();
 void DrawGameOver();
@@ -31,7 +31,7 @@ void WriteTextArray(const char **, int);
 
 Sprite title;
 // Dino :)
-Dino dino(DINO_HIT_WIDTH, TREX_IDLE_HEIGHT, 50.0, FLOOR_HEIGHT - TREX_IDLE_HEIGHT);
+Dino dino(DINO_HIT_WIDTH, TREX_IDLE_HEIGHT, 30.0 + DINO_X_OFFSET, FLOOR_HEIGHT - TREX_IDLE_HEIGHT);
 Obstacle obstacles[OBSTACLE_LIST_SIZE];
 Ground ground;
 
@@ -103,12 +103,15 @@ int main() {
                 ResetDino();
                 ResetObstacles();
 
+                int speed = START_SPEED;
+                int score = 1;
+
                 int tic = 0;
                 while (gameState == GS_GAME) {
 
                     LCD.Update();
                     Sleep(1.0 / FPS);
-                    UpdateFrame(tic);
+                    UpdateFrame(tic, speed);
 
 
                     /* Clicking the screen makes dino jump */
@@ -134,16 +137,21 @@ int main() {
                         UpdateDinosaur(tic);
                     }
 
-                    // Attempt to perform spawn thrice a frame
-                    if (!(tic % (FPS/3))) {
+                    // Attempt to perform spawn twice a second
+                    if (!(tic % (FPS/13 * 5))) {
                         // 1 in 3 chance of spawn
                         if (Random.RandInt() % 3) {
                             SpawnObstacle();
                         }
                     }
 
+                    if (score % 100 == 0 && tic%3 == 0) {
+                        speed += FPS;
+                    }
+
                     // Never end
                     tic++;
+                    score = (tic%3) ? score : score + 1;
                 }
                 break;
             }
@@ -255,12 +263,13 @@ int main() {
     return 0;
 }
 
-void UpdateFrame(int tic) {
+void UpdateFrame(int tic, int speed) {
     ClearFrame();
-    UpdateDinosaur(tic); 
-    UpdateObstacles(tic);
 
-    ground.UpdateGround(8);
+    UpdateDinosaur(tic); 
+    UpdateObstacles(tic, speed);
+
+    ground.UpdateGround(speed);
 
     /* Added floor line for reference */
     // LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE
@@ -279,8 +288,9 @@ void UpdateDinosaur(int tic){
     dino.Draw();
 }
 
-void UpdateObstacles(int tic){
+void UpdateObstacles(int tic, int speed){
     for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
+        obstacles[i].setVel(speed);
         obstacles[i].UpdatePosition();
         obstacles[i].UpdateAnimation(tic);
         obstacles[i].Draw();

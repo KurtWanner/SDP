@@ -27,7 +27,7 @@ class Obstacle : public Object{
         ObstacleType type;
         ObstacleSprite spriteType;
         Sprite sprite;
-        int vel = 8 * FPS;
+        int vel = START_SPEED;
     public:
         /* Constructor inhereted from Object */
         Obstacle(int w, int h, float x, float y) :  Object(w, h, x, y), 
@@ -43,6 +43,7 @@ class Obstacle : public Object{
         ObstacleType getType();
         void setType(ObstacleType t);
         void setSprite(ObstacleSprite);
+        void setVel(int);
 };
 
 extern const unsigned char *obstacle_sprite_list[NUM_OBST_SPRITES];

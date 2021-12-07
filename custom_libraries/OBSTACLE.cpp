@@ -50,6 +50,10 @@ void Obstacle :: UpdateAnimation(int tic) {
     }
 }
 
+void Obstacle :: setVel(int v) {
+    vel = v;
+}
+
 const unsigned char *obstacle_sprite_list[NUM_OBST_SPRITES] {
     cactus_small_single,
     cactus_small_double,

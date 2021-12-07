@@ -39,9 +39,9 @@ void Dino :: UpdateVelocity(){
 }
 
 void Dino :: Draw(){
-    animationFrames[animationState].Draw(getX(),getY()); 
+    animationFrames[animationState].Draw(getX() - DINO_X_OFFSET,getY()); 
     /* Drawing rectangle to check hitboxes */
-    // LCD.DrawRectangle((int) getX(), (int) getY(), getWidth(), getHeight());
+    //LCD.DrawRectangle((int) getX(), (int) getY(), getWidth(), getHeight());
 }
 
 void Dino :: UpdateAnimation(int tic) {
@@ -95,7 +95,7 @@ void Dino :: Duck(){
     }
     
     setHeight(TREX_DUCK_1_HEIGHT);
-    setWidth(TREX_DUCK_1_WIDTH);
+    setWidth(TREX_DUCK_1_WIDTH - DINO_X_OFFSET);
     
     dinoState = DS_DUCK;
 }

@@ -4,7 +4,8 @@
 #define FPS 60
 
 /* Dino Gravity variables */
-#define DINO_HIT_WIDTH 11
+#define DINO_HIT_WIDTH 2
+#define DINO_X_OFFSET 5
 
 #define JUMP_VEL -13
 #define MAX_DINO_ACC 150
@@ -54,6 +55,6 @@ enum GameState {
 #define BIRD_HIT_HEIGHT 11
 #define BIRD_FLY_HEIGHT 15
 
-
+#define START_SPEED ((7) * (FPS))
 
 #endif
