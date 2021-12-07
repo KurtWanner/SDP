@@ -14,6 +14,8 @@
 #include "Util.h"
 #include "Ground.h"
 
+
+/* Function prototypes */
 void UpdateFrame(int tic, int speed);
 void ClearFrame();
 void UpdateDinosaur(int tic);
@@ -28,13 +30,19 @@ void ResetObstacles();
 // WriteTextArray is used since LCD.WriteLine doesn't reset the row that it is on when the screen clears
 void WriteTextArray(const char **, int);
 
-
+/* Title banner on the main menu */
 Sprite title;
-// Dino :)
+
+/* Dinosaur :) */
 Dino dino(DINO_HIT_WIDTH, TREX_IDLE_HEIGHT, 30.0 + DINO_X_OFFSET, FLOOR_HEIGHT - TREX_IDLE_HEIGHT);
+
+/* Obstacle list */
 Obstacle obstacles[OBSTACLE_LIST_SIZE];
+
+/* Ground object */
 Ground ground;
 
+/* Initilize the game state to main menu */
 GameState gameState = GS_MENU;
 
 /* x and y used for LCD.Touch() */
@@ -55,25 +63,31 @@ int main() {
     LCD.Clear();
     Random.Seed();
 
-    title.Init(t_rex_title, TREX_TITLE_WIDTH, TREX_TITLE_HEIGHT);
+    title.Set(t_rex_title, TREX_TITLE_WIDTH, TREX_TITLE_HEIGHT);
 
     /* To always run */
     while(gameState != GS_QUIT){
 
         switch (gameState)
         {
+
+        /* Main menu */
         case GS_MENU:
             {
                 /* Draw main menu only once */
                 drawMainMenu();
+
+                /* If LCD held between screens, wait until touch release */
                 while (LCD.Touch(&x, &y));
+
                 /* Continue running until user makes choice */
                 while(gameState == GS_MENU){
                     if(LCD.Touch(&x, &y)){
+
+                        /* Testing button collision */
                         if(playBtn.btnClicked(x, y)){
                             gameState = GS_GAME;
-                        }
-                        /* Testing button collision */
+                        }                        
                         if(statsBtn.btnClicked(x, y)){
                             gameState = GS_STATS;
                         }
@@ -92,12 +106,11 @@ int main() {
             }
 
             
-        
+        /* Active game */
         case GS_GAME:
             {
                 LCD.Clear();
 
-                /* Draw floor once until floor animation added */
                 LCD.SetBackgroundColor(WHITE);
                 LCD.SetFontColor(BLACK);
                 ResetDino();
@@ -106,25 +119,31 @@ int main() {
                 int speed = START_SPEED;
                 int score = 1;
 
+                /* Tics used for animations and timing */
                 int tic = 0;
+
+                /* Continue until dino hit by obstacle */
                 while (gameState == GS_GAME) {
 
                     LCD.Update();
-                    Sleep(1.0 / FPS);
                     UpdateFrame(tic, speed);
-
 
                     /* Clicking the screen makes dino jump */
                     /* Added tic requirement so dino doesn't immediately jump on game starting */
                     if(LCD.Touch(&x, &y) && tic > 10){ 
-                        //printf("Touch\n");
+                        
+                        /* If touch is above floor, jump and decrease gravity */
                         if(y < FLOOR_HEIGHT){
                             dino.Jump();
                             dino.DecreaseGravity();
+
+                        /* If touch is below floor, duck an increase gravity */
                         } else {
                             dino.Duck();
                             dino.IncreaseGravity();
                         }
+                    
+                    /* If touch is released */
                     } else {
                         /* Chooses animation state */
                         dino.Settle();
@@ -145,29 +164,36 @@ int main() {
                         }
                     }
 
-                    if (score % 100 == 0 && tic%3 == 0) {
+                    /* Increases speed for each multiple of 100 score */
+                    if (score % 100 == 0 && tic % 3 == 0) {
                         speed += FPS;
                     }
 
                     // Never end
                     tic++;
+
+                    /* Increase score once every 3 tics */
                     score = (tic%3) ? score : score + 1;
                 }
                 break;
             }
             
-
+        /* Dead game */
         case GS_GAMEOVER:
             {
-                int tic = 0;
                 float x, y;
                 DrawGameOver();
-                while(LCD.Touch(&x, &y) || tic < 10){ tic++; }
-                while(!LCD.Touch(&x, &y) || tic < 10){ tic++; }
+
+                /* If LCD is held down between screens, wait until touch released */
+                while(LCD.Touch(&x, &y)){}
+
+                /* Wait until screen is touched, then return to main menu */
+                while(!LCD.Touch(&x, &y)){}
                 gameState = GS_MENU;
                 break;
             }
 
+        /* Help page */
         case GS_HELP:
             {
                 Button backBtn(BTN_WIDTH, BTN_HEIGHT, LCD_WIDTH-BTN_WIDTH-2.0, LCD_HEIGHT-BTN_HEIGHT-2.0, "Back"); // Define button
@@ -200,6 +226,7 @@ int main() {
             }
             break;
         
+        /* Stats page */
         case GS_STATS:
             {
                 Button backBtn(BTN_WIDTH, BTN_HEIGHT, LCD_WIDTH-BTN_WIDTH-2.0, LCD_HEIGHT-BTN_HEIGHT-2.0, "Back"); // Define button
@@ -224,6 +251,7 @@ int main() {
                 break;
             }
         
+        /* Credits page */
         case GS_CREDITS:
             {
                 Button backBtn(BTN_WIDTH, BTN_HEIGHT, LCD_WIDTH-BTN_WIDTH-2.0, LCD_HEIGHT-BTN_HEIGHT-2.0, "Back"); // Define button
@@ -263,24 +291,27 @@ int main() {
     return 0;
 }
 
+/* Update the frame for each tic */
 void UpdateFrame(int tic, int speed) {
     ClearFrame();
 
-    UpdateDinosaur(tic); 
+    /* Update dino */
+    UpdateDinosaur(tic);
+
+    /* Update obstacles */ 
     UpdateObstacles(tic, speed);
 
+    /* Update Ground */
     ground.UpdateGround(speed);
-
-    /* Added floor line for reference */
-    // LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE
     ground.DrawGround();
-    //TODO
 }
 
+/* Clears LCD frame */
 void ClearFrame() {
     LCD.Clear();
 }
 
+/* Updates dinosaur velocity, position, and animation */
 void UpdateDinosaur(int tic){
     dino.UpdateVelocity();
     dino.UpdatePosition();
@@ -288,6 +319,7 @@ void UpdateDinosaur(int tic){
     dino.Draw();
 }
 
+/* Updates obstacles' velocity, position, and animation */
 void UpdateObstacles(int tic, int speed){
     for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
         obstacles[i].setVel(speed);
@@ -297,6 +329,7 @@ void UpdateObstacles(int tic, int speed){
     }
 }
 
+/* Resets the dinosaur position between runs */
 void ResetDino(){
     dino.setHeight(TREX_IDLE_HEIGHT);
     dino.setWidth(DINO_HIT_WIDTH);
@@ -304,6 +337,7 @@ void ResetDino(){
     dino.Settle();
 }
 
+/* Set obstacle by setting obstacle type and sprites */
 void SpawnObstacle() {
     for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
         if (obstacles[i].getType() == OT_NONE) {
@@ -333,12 +367,14 @@ void SpawnObstacle() {
     return;
 }
 
+/* Reset all obstacles */
 void ResetObstacles(){
     for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
         obstacles[i].Reset();
     }
 }
 
+/* Collisions between dinosaur and all obstacles */
 bool CheckCollisions(){
     for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
         if (dino.collision(obstacles[i])) return true;
@@ -346,12 +382,13 @@ bool CheckCollisions(){
     return false;
 }
 
+/* Draws the main menu */
 void drawMainMenu(){
     LCD.SetBackgroundColor(WHITE);
     LCD.SetFontColor(BLACK);
     LCD.Clear();
 
-    /* I added a horizontal offset to have the title in the middle of the screen */
+    /* Horizontal offset to have the title in the middle of the screen */
     int horz_offset = (LCD_WIDTH - TREX_TITLE_WIDTH) / 2;
     title.Draw(horz_offset, 0);
 
@@ -363,6 +400,7 @@ void drawMainMenu(){
     creditsBtn.draw();
 }
 
+/* Draws game over screen to LCD */
 void DrawGameOver(){
     ClearFrame();
     dino.UpdateAnimation(0);
@@ -372,12 +410,11 @@ void DrawGameOver(){
         obstacles[i].Draw();
     }
     
-    /* Added floor line for reference */
-    // LCD.DrawLine(0, FLOOR_HEIGHT, LCD_WIDTH, FLOOR_HEIGHT); //REMOVE
     ground.DrawGround();
     LCD.Update();
 }
 
+/* Draws a string to the LCD */
 void WriteTextArray(const char **str, int size){
     for (int i = 0; i < size; ++i) {
         LCD.WriteAt(str[i], (LCD_WIDTH - (CHAR_WIDTH * (StringLength(str[i]) - 1))) / 2, CHAR_HEIGHT * (i + 2));

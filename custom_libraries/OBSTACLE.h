@@ -22,6 +22,8 @@ enum ObstacleSprite {
     NUM_OBST_SPRITES
 };
 
+/* Obstacle class declaration */
+/* Child of object class */
 class Obstacle : public Object{
     private:
         ObstacleType type;

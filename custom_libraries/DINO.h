@@ -23,26 +23,33 @@ enum DinoState {
     DS_DEAD
 };
 
+/* Declaration of dino class */
+/* Child of Object class */
 class Dino : public Object{
     private:
-        /* PosY defined in Object parent */
+
+        /* Position variables defined in Object parent */
         float vel;
         float acc;
 
-        /* Not in use yet, maybe use with draw function? */
+        /* Dino animation variables */
         DinoFrame animationState;
         DinoState dinoState;
         Sprite animationFrames[NUM_DF];
 
     public:
 
+        /* Constructor */
         Dino(int w, int h, float x, float y);
+
+        /* Update functions */
         void UpdateVelocity();
         void UpdatePosition();   
         void UpdateAnimation(int tic);     
 
         void Draw();
 
+        /* Actions */
         void Jump();
         void Duck();
 

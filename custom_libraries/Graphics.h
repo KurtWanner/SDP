@@ -3,16 +3,18 @@
 
 #include "Constants.h"
 
+/* Class defition for the sprite */
 class Sprite {
 public:
     const unsigned char *pixels;
     int width, height;
 
     Sprite() {}
-    void Init(const unsigned char *p, int w, int h);
+    void Set(const unsigned char *p, int w, int h);
     void Draw(int x, int y);
 };
 
+/* Various constants relating to animation sprites */
 #define TREX_TITLE_WIDTH (150)
 #define TREX_TITLE_HEIGHT (12)
 extern const unsigned char t_rex_title[TREX_TITLE_WIDTH*TREX_TITLE_HEIGHT];

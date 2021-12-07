@@ -5,6 +5,7 @@
 #include "Graphics.h"
 #include "OBSTACLE.h"
 
+/* Updates the X position of the obstacle based on velocity */
 void Obstacle :: UpdatePosition(){
     if (type != OT_NONE) {
         setX(getX() - vel/FPS);
@@ -14,6 +15,7 @@ void Obstacle :: UpdatePosition(){
     }
 }
 
+/* Resets the object to the right of the screen with no set obstacle type */
 void Obstacle :: Reset() {
     setWidth(0);
     setHeight(0);
@@ -24,32 +26,37 @@ void Obstacle :: Reset() {
     spriteType = OS_CACT_SMALL_ONE;
 }
 
+/* Draws the obstacle sprite to the LCD */
 void Obstacle :: Draw(){
     if (type != OT_NONE) {
-        //LCD.DrawRectangle(getX(), getY(), getWidth(), getHeight());
         sprite.Draw(getX(), getY());
     }
 }
 
+/* Sets the pixel count, width and height of the obstacle */
 void Obstacle :: setSprite(ObstacleSprite t) {
-    sprite.Init(obstacle_sprite_list[t], obstacle_sprite_widths[t], obstacle_sprite_heights[t]);
+    sprite.Set(obstacle_sprite_list[t], obstacle_sprite_widths[t], obstacle_sprite_heights[t]);
 }
 
+/* Returns the type of current obstacle */
 ObstacleType Obstacle :: getType() {
     return type;
 }
 
+/* Sets the type of the obstacle */
 void Obstacle :: setType(ObstacleType t) {
     type = t;
 }
 
+/* If the obstacle is a bird, update the animation frame */
 void Obstacle :: UpdateAnimation(int tic) {
     if (type == OT_BIRD) {
         spriteType = (tic / 10) % 2 ? OS_BIRD_1 : OS_BIRD_2;
-        sprite.Init(obstacle_sprite_list[spriteType], obstacle_sprite_widths[spriteType], obstacle_sprite_heights[spriteType]);
+        sprite.Set(obstacle_sprite_list[spriteType], obstacle_sprite_widths[spriteType], obstacle_sprite_heights[spriteType]);
     }
 }
 
+/* Set the velocity of the obstacle */
 void Obstacle :: setVel(int v) {
     vel = v;
 }

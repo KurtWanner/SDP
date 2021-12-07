@@ -3,7 +3,9 @@
 #include <OBJECT.h>
 #include <string.h>
 
+/* Class definition of a button */
 class Button : public Object{
+
     private:
         char text[10];
         
@@ -16,7 +18,6 @@ class Button : public Object{
 
         void draw();
         bool btnClicked(int, int);
-
 
 };
 
