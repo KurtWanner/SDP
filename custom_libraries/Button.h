@@ -3,6 +3,7 @@
 #include <OBJECT.h>
 #include <string.h>
 
+/* Made by Kurt */
 /* Class definition of a button */
 class Button : public Object{
 

@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 
+/* Made by Hunter */
 /* Class defition for the sprite */
 class Sprite {
 public:
@@ -14,6 +15,7 @@ public:
     void Draw(int x, int y);
 };
 
+/* All constants made by Hunter */
 /* Various constants relating to animation sprites */
 #define TREX_TITLE_WIDTH (150)
 #define TREX_TITLE_HEIGHT (12)

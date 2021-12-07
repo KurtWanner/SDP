@@ -5,6 +5,7 @@
 #include "Constants.h"
 #include "Object.h"
 
+/* Made by Hunter */
 /* Ground class definition */
 /* Child of Object class */
 class Ground : public Object {

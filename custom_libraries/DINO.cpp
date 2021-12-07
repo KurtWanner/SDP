@@ -4,6 +4,7 @@
 #include <iostream>
 #include <Constants.h>
 
+/* Made by Kurt */
 /* Class constructor for the dino inherited from Object */
 Dino :: Dino(int w, int h, float x, float y) :  Object(w, h, x, y),
                                                 vel(0),
@@ -20,6 +21,7 @@ Dino :: Dino(int w, int h, float x, float y) :  Object(w, h, x, y),
     animationFrames[DF_DUCK_2].Set(t_rex_duck_2, TREX_DUCK_2_WIDTH, TREX_DUCK_2_HEIGHT);
 }
 
+/* Made by Kurt */
 /* To be run every frame to update the position of the dino */
 void Dino :: UpdatePosition(){
 
@@ -34,16 +36,19 @@ void Dino :: UpdatePosition(){
     }
 }
 
+/* Made by Kurt */
 /* To be run every frame to update the velocity of the dino */
 void Dino :: UpdateVelocity(){
     vel += (acc / FPS);
 }
 
+/* Made by Hunter */
 /* Draw the dino to the LCD screen using the current animation state */
 void Dino :: Draw(){
     animationFrames[animationState].Draw(getX() - DINO_X_OFFSET,getY()); 
 }
 
+/* Made by Hunter */
 /* Update the dino animation Sprite depending on the current dinoState */
 void Dino :: UpdateAnimation(int tic) {
     switch (dinoState)
@@ -73,6 +78,7 @@ void Dino :: UpdateAnimation(int tic) {
     }
 }
 
+/* Made by Kurt */
 /* Causes the dinosaur to be given a negative velocity (jump) */
 void Dino :: Jump(){
 
@@ -88,6 +94,7 @@ void Dino :: Jump(){
     dinoState = DS_JUMP;
 }
 
+/* Made by Kurt */
 /* Causes the dinosaur to duck by adjusting hitbox and animation frames */
 void Dino :: Duck(){
     
@@ -112,6 +119,7 @@ void Dino :: Duck(){
     dinoState = DS_DUCK;
 }
 
+/* Made by Kurt */
 /* For when input is remove from screen, what animation to use */
 void Dino :: Settle(){
 
@@ -134,6 +142,7 @@ void Dino :: Settle(){
     }
 }
 
+/* Made by Kurt */
 /* When the user is ducking in the air, increase the vertical acceleration */
 void Dino :: IncreaseGravity(){
 
@@ -146,6 +155,7 @@ void Dino :: IncreaseGravity(){
     }
 }
 
+/* Made by Kurt */
 /* When the user is holding the jump button, decrease the verical acceleration */
 void Dino :: DecreaseGravity(){
 
@@ -158,6 +168,7 @@ void Dino :: DecreaseGravity(){
     }
 }
 
+/* Made by Kurt */
 /* Kills the dinosaur movement and sets animation to dead */
 void Dino :: Kill(){
     dinoState = DS_DEAD;

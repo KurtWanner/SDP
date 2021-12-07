@@ -4,6 +4,7 @@
 #define NUM_HI_SCORES 5
 #define STATS_STR_SIZE ((LCD_WIDTH)/(CHAR_WIDTH))
 
+/* Made by Hunter */
 class Statistics {
     private:
         int highScores[NUM_HI_SCORES];

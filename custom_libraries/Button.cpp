@@ -3,6 +3,7 @@
 #include "Button.h"
 #include "Util.h"
 
+/* Made by Kurt */
 /* Draws the button to the LCD Screen */
 void Button :: draw(){
 
@@ -14,6 +15,7 @@ void Button :: draw(){
 
 }
 
+/* Made by Kurt */
 /* Test if the x, y arguments are within the borders of the button */
 bool Button :: btnClicked(int x, int y){
 

@@ -23,6 +23,7 @@ enum DinoState {
     DS_DEAD
 };
 
+/* Made by Kurt */
 /* Declaration of dino class */
 /* Child of Object class */
 class Dino : public Object{

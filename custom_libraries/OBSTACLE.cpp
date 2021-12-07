@@ -5,6 +5,7 @@
 #include "Graphics.h"
 #include "OBSTACLE.h"
 
+/* Made by Hunter */
 /* Updates the X position of the obstacle based on velocity */
 void Obstacle :: UpdatePosition(){
     if (type != OT_NONE) {
@@ -15,6 +16,7 @@ void Obstacle :: UpdatePosition(){
     }
 }
 
+/* Made by Hunter */
 /* Resets the object to the right of the screen with no set obstacle type */
 void Obstacle :: Reset() {
     setWidth(0);
@@ -26,6 +28,7 @@ void Obstacle :: Reset() {
     spriteType = OS_CACT_SMALL_ONE;
 }
 
+/* Made by Hunter */
 /* Draws the obstacle sprite to the LCD */
 void Obstacle :: Draw(){
     if (type != OT_NONE) {
@@ -33,21 +36,25 @@ void Obstacle :: Draw(){
     }
 }
 
+/* Made by Hunter */
 /* Sets the pixel count, width and height of the obstacle */
 void Obstacle :: setSprite(ObstacleSprite t) {
     sprite.Set(obstacle_sprite_list[t], obstacle_sprite_widths[t], obstacle_sprite_heights[t]);
 }
 
+/* Made by Hunter */
 /* Returns the type of current obstacle */
 ObstacleType Obstacle :: getType() {
     return type;
 }
 
+/* Made by Hunter */
 /* Sets the type of the obstacle */
 void Obstacle :: setType(ObstacleType t) {
     type = t;
 }
 
+/* Made by Hunter */
 /* If the obstacle is a bird, update the animation frame */
 void Obstacle :: UpdateAnimation(int tic) {
     if (type == OT_BIRD) {
@@ -56,11 +63,13 @@ void Obstacle :: UpdateAnimation(int tic) {
     }
 }
 
+/* Made by Hunter */
 /* Set the velocity of the obstacle */
 void Obstacle :: setVel(int v) {
     vel = v;
 }
 
+/* All Char arrays Made by Hunter */
 const unsigned char *obstacle_sprite_list[NUM_OBST_SPRITES] {
     cactus_small_single,
     cactus_small_double,

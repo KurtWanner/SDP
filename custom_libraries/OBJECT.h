@@ -1,6 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+/* Made by Kurt */
 /* Object class declaration */
 /* To be parent class for dinosaur, obstacles, and ground */
 class Object {

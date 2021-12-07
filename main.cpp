@@ -44,9 +44,13 @@ Obstacle obstacles[OBSTACLE_LIST_SIZE];
 /* Ground object */
 Ground ground;
 
+/* Set initial score to 1 */
 int score = 1;
+
+/* Initilize stats object */
 Statistics stats;
 
+/* Set initial game state to main menu */
 GameState gameState = GS_MENU;
 
 /* x and y used for LCD.Touch() */
@@ -60,16 +64,19 @@ Button creditsBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 160.0, "Credits");
 Button quitBtn(BTN_WIDTH, BTN_HEIGHT, BTN_X, 200.0, "Quit");
 
 
+/* Made by Kurt and Hunter */
 int main() {
 
     /* Clear background */
     LCD.SetBackgroundColor(WHITE);
     LCD.Clear();
+
+    /* Set random seed */
     Random.Seed();
 
     title.Set(t_rex_title, TREX_TITLE_WIDTH, TREX_TITLE_HEIGHT);
 
-    /* To always run */
+    /* To always run until quiting */
     while(gameState != GS_QUIT){
 
         switch (gameState)
@@ -185,7 +192,7 @@ int main() {
         /* Dead game */
         case GS_GAMEOVER:
             {
-                int tic = 0, place = stats.GetScorePlacing(score);
+                int place = stats.GetScorePlacing(score);
                 float x, y;
                 bool newHighscore = false;
                 if (place != -1) {
@@ -193,8 +200,8 @@ int main() {
                     stats.Insert(score, place);
                 }
                 DrawGameOver(newHighscore);
-                while(LCD.Touch(&x, &y) || tic < 10){ tic++; }
-                while(!LCD.Touch(&x, &y) || tic < 10){ tic++; }
+                while(LCD.Touch(&x, &y));
+                while(!LCD.Touch(&x, &y));
                 gameState = GS_MENU;
                 break;
             }
@@ -222,9 +229,9 @@ int main() {
                 LCD.DrawLine(0, CHAR_HEIGHT + 2, LCD_WIDTH, CHAR_HEIGHT);
                 WriteTextArray(help_instr, ARRAY_SIZE(help_instr));
 
+                backBtn.draw();
+                int x, y;
                 while (gameState == GS_HELP) {
-                    backBtn.draw();
-                    int x, y;
                     if (LCD.Touch(&x, &y) && backBtn.btnClicked(x, y)) {
                         gameState = GS_MENU;
                     }
@@ -252,9 +259,9 @@ int main() {
                     LCD.WriteAt(stats.getScore(i), 3 * CHAR_WIDTH, CHAR_HEIGHT * (i + 3));
                 }
                 
+                backBtn.draw();
+                int x, y;
                 while (gameState == GS_STATS) {
-                    backBtn.draw();
-                    int x, y;
                     if (LCD.Touch(&x, &y) && backBtn.btnClicked(x, y)) {
                         gameState = GS_MENU;
                     }
@@ -286,9 +293,9 @@ int main() {
                 LCD.Write("\n\n\n");
                 WriteTextArray(credits_text, ARRAY_SIZE(credits_text));
                 
+                int x, y;
+                backBtn.draw();
                 while (gameState == GS_CREDITS) {
-                    backBtn.draw();
-                    int x, y;
                     if (LCD.Touch(&x, &y) && backBtn.btnClicked(x, y)) {
                         gameState = GS_MENU;
                     }
@@ -303,6 +310,7 @@ int main() {
     return 0;
 }
 
+/* Made by Kurt and Hunter */
 /* Update the frame for each tic */
 void UpdateFrame(int tic, int speed) {
     ClearFrame();
@@ -321,6 +329,7 @@ void UpdateFrame(int tic, int speed) {
     ground.DrawGround();
 }
 
+/* Made by Hunter */
 /* Print score to screen */
 void PrintScore() {
     const char *scoreText = "Score: ";
@@ -328,11 +337,13 @@ void PrintScore() {
     LCD.WriteAt(score, CHAR_WIDTH * (StringLength(scoreText) - 1), 0);
 }
 
+/* Made by Hunter */
 /* Clears the LCD screen */
 void ClearFrame() {
     LCD.Clear();
 }
 
+/* Made by Kurt */
 /* Updates dinosaur velocity, position, and animation */
 void UpdateDinosaur(int tic){
     dino.UpdateVelocity();
@@ -341,6 +352,7 @@ void UpdateDinosaur(int tic){
     dino.Draw();
 }
 
+/* Made by Hunter */
 /* Updates obstacles' velocity, position, and animation */
 void UpdateObstacles(int tic, int speed){
     for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
@@ -351,6 +363,7 @@ void UpdateObstacles(int tic, int speed){
     }
 }
 
+/* Made by Kurt */
 /* Resets the dinosaur position between runs */
 void ResetDino(){
     dino.setHeight(TREX_IDLE_HEIGHT);
@@ -359,6 +372,7 @@ void ResetDino(){
     dino.Settle();
 }
 
+/* Made by Hunter */
 /* Set obstacle by setting obstacle type and sprites */
 void SpawnObstacle() {
     for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
@@ -389,6 +403,7 @@ void SpawnObstacle() {
     return;
 }
 
+/* Made by Hunter */
 /* Reset all obstacles */
 void ResetObstacles(){
     for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
@@ -396,6 +411,7 @@ void ResetObstacles(){
     }
 }
 
+/* Made by Kurt and Hunter */
 /* Collisions between dinosaur and all obstacles */
 bool CheckCollisions(){
     for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i) {
@@ -404,6 +420,7 @@ bool CheckCollisions(){
     return false;
 }
 
+/* Made by Kurt and Hunter */
 /* Draws the main menu */
 void drawMainMenu(){
     LCD.SetBackgroundColor(WHITE);
@@ -422,6 +439,7 @@ void drawMainMenu(){
     creditsBtn.draw();
 }
 
+/* Made by Kurt and Hunter */
 /* Draws the game over screen */
 void DrawGameOver(bool newHighscore){
 
@@ -451,6 +469,7 @@ void DrawGameOver(bool newHighscore){
     LCD.Update();
 }
 
+/* Made by Hunter */
 /* Draws a string to the LCD */
 void WriteTextArray(const char **str, int size){
     for (int i = 0; i < size; ++i) {

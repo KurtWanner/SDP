@@ -4,6 +4,7 @@
 #include "OBJECT.h"
 #include "Constants.h"
 
+/* Enums Made by Hunter */
 enum ObstacleType {
     OT_NONE,
     OT_CACTUS,
@@ -22,6 +23,7 @@ enum ObstacleSprite {
     NUM_OBST_SPRITES
 };
 
+/* Made by Kurt */
 /* Obstacle class declaration */
 /* Child of object class */
 class Obstacle : public Object{
