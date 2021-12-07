@@ -8,9 +8,17 @@ class Statistics {
     private:
         int highScores[NUM_HI_SCORES];
     public:
+        // Initializes stats class
         Statistics();
+        
+        // Compares score argument to highscores and determines where it should go in the score placing
+        // Returns -1 if the score isn't good enough
         int GetScorePlacing(int score);
+        
+        // Inserts a score into the highscore list
         void Insert(int score, int place);
+
+        // Gets a score from the high score list
         int getScore(int i);
 
 };
