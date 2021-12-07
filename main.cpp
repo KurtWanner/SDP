@@ -13,6 +13,7 @@
 #include "OBSTACLE.h"
 #include "Util.h"
 #include "Ground.h"
+#include "Statistics.h"
 
 
 /* Function prototypes */
@@ -22,10 +23,11 @@ void UpdateDinosaur(int tic);
 void UpdateObstacles(int tic, int speed);
 void drawMainMenu();
 bool CheckCollisions();
-void DrawGameOver();
+void DrawGameOver(bool);
 void ResetDino();
 void SpawnObstacle();
 void ResetObstacles();
+void PrintScore();
 
 // WriteTextArray is used since LCD.WriteLine doesn't reset the row that it is on when the screen clears
 void WriteTextArray(const char **, int);
@@ -42,7 +44,9 @@ Obstacle obstacles[OBSTACLE_LIST_SIZE];
 /* Ground object */
 Ground ground;
 
-/* Initilize the game state to main menu */
+int score = 1;
+Statistics stats;
+
 GameState gameState = GS_MENU;
 
 /* x and y used for LCD.Touch() */
@@ -117,7 +121,7 @@ int main() {
                 ResetObstacles();
 
                 int speed = START_SPEED;
-                int score = 1;
+                score = 1;                
 
                 /* Tics used for animations and timing */
                 int tic = 0;
@@ -181,14 +185,16 @@ int main() {
         /* Dead game */
         case GS_GAMEOVER:
             {
+                int tic = 0, place = stats.GetScorePlacing(score);
                 float x, y;
-                DrawGameOver();
-
-                /* If LCD is held down between screens, wait until touch released */
-                while(LCD.Touch(&x, &y)){}
-
-                /* Wait until screen is touched, then return to main menu */
-                while(!LCD.Touch(&x, &y)){}
+                bool newHighscore = false;
+                if (place != -1) {
+                    newHighscore = place == 0;
+                    stats.Insert(score, place);
+                }
+                DrawGameOver(newHighscore);
+                while(LCD.Touch(&x, &y) || tic < 10){ tic++; }
+                while(!LCD.Touch(&x, &y) || tic < 10){ tic++; }
                 gameState = GS_MENU;
                 break;
             }
@@ -239,6 +245,12 @@ int main() {
                 LCD.WriteAt(stats_title, (LCD_WIDTH - (CHAR_WIDTH * (StringLength(stats_title) - 1))) / 2, 0);
                 LCD.DrawLine(0, CHAR_HEIGHT + 2, LCD_WIDTH, CHAR_HEIGHT);
                 LCD.Write("\n\n\n");
+
+                for (int i = 0; i < NUM_HI_SCORES; ++i) {
+                    LCD.WriteAt(i + 1, 0, CHAR_HEIGHT * (i + 3));
+                    LCD.WriteAt(". ", 1 * CHAR_WIDTH, CHAR_HEIGHT * (i + 3));
+                    LCD.WriteAt(stats.getScore(i), 3 * CHAR_WIDTH, CHAR_HEIGHT * (i + 3));
+                }
                 
                 while (gameState == GS_STATS) {
                     backBtn.draw();
@@ -300,13 +312,23 @@ void UpdateFrame(int tic, int speed) {
 
     /* Update obstacles */ 
     UpdateObstacles(tic, speed);
-
+    
+    /* Print Score */
+    PrintScore();
+ 
     /* Update Ground */
     ground.UpdateGround(speed);
     ground.DrawGround();
 }
 
-/* Clears LCD frame */
+/* Print score to screen */
+void PrintScore() {
+    const char *scoreText = "Score: ";
+    LCD.WriteAt(scoreText, 0, 0);
+    LCD.WriteAt(score, CHAR_WIDTH * (StringLength(scoreText) - 1), 0);
+}
+
+/* Clears the LCD screen */
 void ClearFrame() {
     LCD.Clear();
 }
@@ -400,17 +422,32 @@ void drawMainMenu(){
     creditsBtn.draw();
 }
 
-/* Draws game over screen to LCD */
-void DrawGameOver(){
+/* Draws the game over screen */
+void DrawGameOver(bool newHighscore){
+
     ClearFrame();
+
+    /* Update and draw dino */
     dino.UpdateAnimation(0);
     dino.Draw();
 
+    /* Draw each obstacle */
     for (int i = 0; i < OBSTACLE_LIST_SIZE; ++i){
         obstacles[i].Draw();
     }
     
+    /* Draw ground */
     ground.DrawGround();
+
+    /* If new highscore, indicate such to user */
+    if (newHighscore) {
+        const char *highScoreText = "NEW HIGH SCORE!";
+        const int offset = 4;
+        LCD.WriteAt(highScoreText, (LCD_WIDTH - (CHAR_WIDTH * (StringLength(highScoreText) - 1))) / 2, FLOOR_HEIGHT + GROUND_HEIGHT + offset);
+    }
+
+    /* Print score and update LCD */
+    PrintScore();
     LCD.Update();
 }
 
